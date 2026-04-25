@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notatapp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1a1208;
+      --paper: #faf8f4;
+      --cream: #f2ede3;
+      --rule: #d9d0bc;
+      --accent: #b5261e;
+      --accent-soft: #f5e8e7;
+      --muted: #7a7060;
+      --stamp: #2c4a2e;
+      --stamp-soft: #e8f0e8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 27px,
+        rgba(180,165,130,0.12) 27px,
+        rgba(180,165,130,0.12) 28px
+      );
+    }
+
+    h1, .headline { font-family: 'Playfair Display', serif; }
+
+    /* Masthead */
+    .edition-bar {
+      background: var(--ink);
+      color: white;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 600;
+      text-align: center;
+      padding: 3px 0;
+    }
+
+    .masthead {
+      border-bottom: 3px double var(--rule);
+      background: white;
+    }
+
+    .masthead-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem 0.75rem;
+      display: flex;
+      align-items: baseline;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .masthead h1 {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: var(--ink);
+    }
+
+    .masthead-date {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 500;
+      border-left: 1px solid var(--rule);
+      padding-left: 1rem;
+    }
+
+    /* Layout */
+    .main { max-width: 860px; margin: 0 auto; padding: 1.5rem; }
+
+    /* Editor card */
+    .editor-card {
+      background: white;
+      border: 1px solid var(--rule);
+      border-top: 3px solid var(--accent);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .editor-label {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    textarea {
+      width: 100%;
+      border: none;
+      outline: none;
+      resize: none;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--ink);
+      background: transparent;
+      min-height: 100px;
+    }
+
+    textarea::placeholder { color: #b8ae9a; }
+
+    .editor-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--cream);
+      margin-top: 0.75rem;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .wordcount { font-size: 12px; color: var(--muted); font-weight: 500; }
+    .wordcount.warn { color: #c47a00; }
+    .wordcount.over { color: var(--accent); font-weight: 600; }
+
+    .btn-rad { display: flex; gap: 0.5rem; align-items: center; }
+
+    /* Buttons */
+    .btn {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 7px 18px;
+      border: none;
+      cursor: pointer;
+      transition: all .12s;
+      border-radius: 2px;
+    }
+
+    .btn-primary { background: var(--ink); color: white; }
+    .btn-primary:hover { background: #333; }
+
+    .btn-danger { background: white; color: var(--accent); border: 1px solid var(--accent); }
+    .btn-danger:hover { background: var(--accent); color: white; }
+
+    .btn-sm { font-size: 11px; padding: 4px 10px; }
+
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--rule); }
+    .btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
+
+    /* Redigering varsel */
+    .redigering-varsel {
+      display: none;
+      font-size: 11px;
+      color: var(--muted);
+      font-style: italic;
+      margin-top: 8px;
+    }
+
+    /* Etiketter */
+    .etikett-valg { margin-top: 1rem; }
+
+    .label-row { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
+
+    .label-pick {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 2px;
+      border: 1px solid var(--rule);
+      background: white;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--muted);
+      transition: all .12s;
+      font-family: 'Source Sans 3', sans-serif;
+    }
+
+    .label-pick:hover { border-color: var(--ink); color: var(--ink); }
+    .label-pick.selected { color: white; border-color: transparent; }
+
+    /* Etikett-nedtrekk */
+    .etikett-dropdown { position: relative; display: inline-block; }
+
+    .etikett-dropdown-knapp {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 2px;
+      border: 1px solid var(--rule);
+      background: white;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--muted);
+      font-family: 'Source Sans 3', sans-serif;
+      transition: all .12s;
+    }
+
+    .etikett-dropdown-knapp:hover { border-color: var(--ink); color: var(--ink); }
+    .etikett-dropdown-knapp.har-valgte {
+      background: var(--stamp-soft);
+      border-color: var(--stamp);
+      color: var(--stamp);
+    }
+
+    .etikett-dropdown-innhold {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      background: white;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      padding: 8px;
+      z-index: 10;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      flex-wrap: wrap;
+      gap: 6px;
+      min-width: 180px;
+      max-width: 320px;
+    }
+
+    .etikett-dropdown-innhold.aapen { display: flex; }
+
+    /* Ny etikett */
+    .ny-etikett-rad {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+      align-items: center;
+    }
+
+    .ny-etikett-rad input {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 12px;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      padding: 4px 10px;
+      width: 160px;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .ny-etikett-rad input:focus { border-color: var(--ink); }
+
+    /* Søk */
+    .søk-omrade {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    #søk-input {
+      flex: 1;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 13px;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      padding: 7px 14px;
+      background: white;
+      color: var(--ink);
+      outline: none;
+    }
+
+    #søk-input:focus { border-color: var(--ink); }
+
+    #søk-dato-input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      width: 0;
+      height: 0;
+    }
+
+    .søk-kalender-knapp {
+      background: white;
+      border: 1px solid var(--rule);
+      color: var(--muted);
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      transition: all .12s;
+    }
+
+    .søk-kalender-knapp:hover { border-color: var(--ink); color: var(--ink); }
+    .søk-kalender-knapp.aktiv {
+      color: var(--stamp);
+      border-color: var(--stamp);
+      background: var(--stamp-soft);
+    }
+
+    .søk-tøm-knapp {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      line-height: 1;
+      border-radius: 2px;
+      transition: color 0.12s;
+    }
+
+    .søk-tøm-knapp:hover { color: var(--ink); }
+
+    /* Listetittel + sortering */
+    .liste-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .notat-liste-tittel {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .sort-btn {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 2px;
+      border: 1px solid var(--rule);
+      background: white;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--muted);
+      font-family: 'Source Sans 3', sans-serif;
+      transition: all .12s;
+    }
+
+    .sort-btn:hover { border-color: var(--ink); color: var(--ink); }
+    .sort-btn.active { background: var(--cream); border-color: var(--ink); color: var(--ink); }
+
+    /* Notatkort */
+    .note-grid { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .note-card {
+      background: white;
+      border: 1px solid var(--rule);
+      border-left: 3px solid var(--rule);
+      padding: 1rem 1.25rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: box-shadow .15s;
+      cursor: pointer;
+    }
+
+    .note-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .note-card.editing { border-left-color: var(--accent); background: #fffdf9; }
+
+    .note-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .note-label-badge {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: opacity .12s;
+    }
+
+    .note-label-badge:hover { opacity: 0.72; }
+
+    .note-date { font-size: 11px; color: var(--muted); }
+
+    .note-edited-date {
+      font-size: 10px;
+      color: var(--rule);
+      font-style: italic;
+    }
+
+    .note-text {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--ink);
+      font-family: 'Source Sans 3', sans-serif;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Tom liste */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--muted);
+    }
+
+    .empty-state .headline { font-size: 18px; margin-bottom: 0.4rem; color: var(--rule); }
+    .empty-state p { font-size: 13px; }
+
+    /* Høyreklikkmeny */
+    .kontekst-meny {
+      position: fixed;
+      background: white;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+      padding: 4px 0;
+      z-index: 100;
+      min-width: 170px;
+      display: none;
+    }
+
+    .kontekst-meny.synlig { display: block; }
+
+    .kontekst-meny-element {
+      display: block;
+      width: 100%;
+      padding: 9px 16px;
+      text-align: left;
+      background: none;
+      border: none;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 13px;
+      color: var(--ink);
+      cursor: pointer;
+      transition: background-color 0.1s;
+    }
+
+    .kontekst-meny-element:hover { background-color: var(--cream); }
+    .kontekst-meny-element.fare { color: var(--accent); }
+    .kontekst-meny-element.fare:hover { background-color: var(--accent-soft); }
+
+    .kontekst-meny-skillelinje {
+      height: 1px;
+      background-color: var(--rule);
+      margin: 4px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="edition-bar">Mine notater</div>
+  <header class="masthead">
+    <div class="masthead-inner">
+      <h1>Notatbok</h1>
+      <span class="masthead-date" id="masthead-date"></span>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <div class="editor-card">
+      <div class="editor-label" id="editor-label-tekst">Nytt notat</div>
+      <textarea id="notat-input" placeholder="Begynn å skrive her..."></textarea>
+
+      <div class="etikett-valg">
+        <p class="editor-label">Etiketter — maks 5 <span id="etikett-teller"></span></p>
+        <div class="label-row" id="etikett-knapper"></div>
+        <div class="ny-etikett-rad">
+          <input type="text" id="ny-etikett-input" placeholder="Ny etikett..." maxlength="30" />
+          <button class="btn btn-ghost btn-sm" id="legg-til-etikett-knapp">+ Legg til</button>
+        </div>
+      </div>
+
+      <div class="editor-footer">
+        <span class="wordcount" id="wordcount"></span>
+        <div class="btn-rad">
+          <button class="btn btn-ghost" id="avbryt-knapp" style="display:none;">Avbryt</button>
+          <button class="btn btn-danger btn-sm" id="slett-knapp" style="display:none;">Slett</button>
+          <button class="btn btn-primary" id="lagre-knapp">Lagre notat</button>
+        </div>
+      </div>
+      <span class="redigering-varsel" id="redigering-varsel">Klikk på et annet notat for å redigere det i stedet</span>
+    </div>
+
+    <div class="søk-omrade">
+      <input type="text" id="søk-input" placeholder="Søk på ord, dato eller etikett..." />
+      <input type="date" id="søk-dato-input" />
+      <button class="søk-kalender-knapp" id="søk-kalender-knapp" title="Velg dato">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="3" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="1" y1="7" x2="15" y2="7" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="5" y1="1" x2="5" y2="5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="11" y1="1" x2="11" y2="5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button class="søk-tøm-knapp" id="søk-tøm-knapp" style="display: none;" title="Tøm søk">✕</button>
+    </div>
+
+    <div class="liste-header">
+      <p class="notat-liste-tittel" id="liste-tittel"></p>
+      <button class="sort-btn" id="sorter-knapp">Nyeste først ▾</button>
+    </div>
+
+    <div class="note-grid" id="notat-liste"></div>
+
+  </main>
+
+  <div class="kontekst-meny" id="kontekst-meny">
+    <button class="kontekst-meny-element" id="km-rediger">Rediger notat</button>
+    <div class="kontekst-meny-skillelinje"></div>
+    <button class="kontekst-meny-element fare" id="km-slett">Slett notat</button>
+  </div>
+
+  <script>
+    document.getElementById("masthead-date").textContent = new Date().toLocaleDateString("nb-NO", {
+      weekday: "long", day: "numeric", month: "long", year: "numeric"
+    }).toUpperCase();
+
+    const FARGEPALETT = [
+      "#4a7fb5", "#7b68a8", "#3a8a78", "#b5882a",
+      "#c07040", "#7a8a5a", "#4a7a9e", "#a85878",
+      "#6b7f6b", "#8e6b75", "#5a7a8e", "#8e7a5a",
+      "#6e6e9e", "#9e6e6e", "#6e9e8a", "#9e8a6e"
+    ];
+
+    const STANDARD_ETIKETTER = [
+      "innledning", "avslutning", "fakta", "gullsitat",
+      "observasjon", "bakgrunn", "statistikk", "anekdote"
+    ];
+
+    // --- Etiketter ---
+
+    function hentEtiketter() {
+      const lagret = localStorage.getItem("etiketter");
+      if (lagret) return JSON.parse(lagret);
+      const standard = STANDARD_ETIKETTER.map(function (navn, i) {
+        return { navn: navn, farge: FARGEPALETT[i] };
+      });
+      lagreEtiketter(standard);
+      return standard;
+    }
+
+    function lagreEtiketter(etiketter) {
+      localStorage.setItem("etiketter", JSON.stringify(etiketter));
+    }
+
+    function hentBruksRekkefølge() {
+      const lagret = localStorage.getItem("etikett-bruk");
+      return lagret ? JSON.parse(lagret) : [];
+    }
+
+    function oppdaterBruksRekkefølge(navn) {
+      let rekkefølge = hentBruksRekkefølge();
+      rekkefølge = rekkefølge.filter(function (n) { return n !== navn; });
+      rekkefølge.unshift(navn);
+      localStorage.setItem("etikett-bruk", JSON.stringify(rekkefølge));
+    }
+
+    function hentFargeForNavn(navn) {
+      const etiketter = hentEtiketter();
+      const funnet = etiketter.find(function (e) { return e.navn === navn; });
+      return funnet ? funnet.farge : "#999";
+    }
+
+    function lagEtikettKnapp(etikett) {
+      const erValgt = valgteEtiketter.indexOf(etikett.navn) !== -1;
+      const knapp = document.createElement("button");
+      knapp.className = "label-pick" + (erValgt ? " selected" : "");
+      knapp.dataset.etikett = etikett.navn;
+      knapp.textContent = etikett.navn.charAt(0).toUpperCase() + etikett.navn.slice(1);
+
+      if (erValgt) {
+        knapp.style.backgroundColor = etikett.farge;
+        knapp.style.borderColor = etikett.farge;
+      }
+
+      if (!erValgt && valgteEtiketter.length >= 5) {
+        knapp.style.opacity = "0.4";
+        knapp.style.cursor = "not-allowed";
+      }
+
+      knapp.addEventListener("click", function () {
+        const index = valgteEtiketter.indexOf(etikett.navn);
+        if (index !== -1) {
+          valgteEtiketter.splice(index, 1);
+        } else if (valgteEtiketter.length < 5) {
+          valgteEtiketter.push(etikett.navn);
+          oppdaterBruksRekkefølge(etikett.navn);
+        }
+        visEtiketter();
+      });
+
+      return knapp;
+    }
+
+    function visEtiketter() {
+      const etiketter = hentEtiketter();
+      const container = document.getElementById("etikett-knapper");
+      const teller = document.getElementById("etikett-teller");
+      container.innerHTML = "";
+
+      teller.textContent = valgteEtiketter.length > 0
+        ? "(" + valgteEtiketter.length + "/5 valgt)"
+        : "";
+
+      const bruksRekkefølge = hentBruksRekkefølge();
+      const sorterteEtiketter = [...etiketter].sort(function (a, b) {
+        const iA = bruksRekkefølge.indexOf(a.navn);
+        const iB = bruksRekkefølge.indexOf(b.navn);
+        if (iA === -1 && iB === -1) return 0;
+        if (iA === -1) return 1;
+        if (iB === -1) return -1;
+        return iA - iB;
+      });
+
+      const synlige = [];
+      const resten = [];
+
+      sorterteEtiketter.forEach(function (e) {
+        if (valgteEtiketter.indexOf(e.navn) !== -1 && synlige.length < 4) {
+          synlige.push(e);
+        }
+      });
+      sorterteEtiketter.forEach(function (e) {
+        if (synlige.indexOf(e) === -1 && synlige.length < 4) {
+          synlige.push(e);
+        }
+      });
+      sorterteEtiketter.forEach(function (e) {
+        if (synlige.indexOf(e) === -1) {
+          resten.push(e);
+        }
+      });
+
+      synlige.forEach(function (etikett) {
+        container.appendChild(lagEtikettKnapp(etikett));
+      });
+
+      if (resten.length > 0) {
+        const dropdown = document.createElement("div");
+        dropdown.className = "etikett-dropdown";
+
+        const valgtIResten = resten.filter(function (e) {
+          return valgteEtiketter.indexOf(e.navn) !== -1;
+        }).length;
+
+        const dropKnapp = document.createElement("button");
+        dropKnapp.className = "etikett-dropdown-knapp" + (valgtIResten > 0 ? " har-valgte" : "");
+        dropKnapp.textContent = "Flere" + (valgtIResten > 0 ? " (" + valgtIResten + ")" : "") + " ▾";
+
+        const dropInnhold = document.createElement("div");
+        dropInnhold.className = "etikett-dropdown-innhold";
+        dropInnhold.id = "etikett-dropdown-innhold";
+
+        resten.forEach(function (etikett) {
+          dropInnhold.appendChild(lagEtikettKnapp(etikett));
+        });
+
+        dropKnapp.addEventListener("click", function (e) {
+          e.stopPropagation();
+          dropInnhold.classList.toggle("aapen");
+        });
+
+        dropdown.appendChild(dropKnapp);
+        dropdown.appendChild(dropInnhold);
+        container.appendChild(dropdown);
+      }
+    }
+
+    function leggTilEtikett(navn) {
+      navn = navn.trim().toLowerCase();
+      if (!navn) return;
+
+      const etiketter = hentEtiketter();
+
+      const finnesAllerede = etiketter.some(function (e) { return e.navn === navn; });
+      if (finnesAllerede) {
+        document.getElementById("ny-etikett-input").value = "";
+        return;
+      }
+
+      const nesteFarge = FARGEPALETT[etiketter.length % FARGEPALETT.length];
+      etiketter.push({ navn: navn, farge: nesteFarge });
+      lagreEtiketter(etiketter);
+
+      document.getElementById("ny-etikett-input").value = "";
+      if (valgteEtiketter.length < 5) {
+        valgteEtiketter.push(navn);
+      }
+      visEtiketter();
+    }
+
+    // --- Notater ---
+
+    function hentNotater() {
+      const lagret = localStorage.getItem("notater");
+      return lagret ? JSON.parse(lagret) : [];
+    }
+
+    function lagreNotater(notater) {
+      localStorage.setItem("notater", JSON.stringify(notater));
+    }
+
+    function filtrerNotater(notater) {
+      if (!søkeTekst) return notater;
+      const termer = søkeTekst
+        .split(" and ")
+        .map(function (t) { return t.trim(); })
+        .filter(function (t) { return t !== ""; });
+      return notater.filter(function (notat) {
+        const etikettListe = notat.etiketter
+          ? notat.etiketter
+          : (notat.etikett ? [notat.etikett] : []);
+        return termer.every(function (term) {
+          return notat.tekst.toLowerCase().includes(term) ||
+            (notat.dato && notat.dato.toLowerCase().includes(term)) ||
+            (notat.redigertDato && notat.redigertDato.toLowerCase().includes(term)) ||
+            etikettListe.some(function (e) { return e.toLowerCase().includes(term); });
+        });
+      });
+    }
+
+    // --- Tilstand ---
+
+    let valgteEtiketter = [];
+    let redigerNotatId = null;
+    let søkeTekst = "";
+    let sorteringsRekkefølge = "nyest";
+
+    const input = document.getElementById("notat-input");
+    const lagreKnapp = document.getElementById("lagre-knapp");
+    const avbrytKnapp = document.getElementById("avbryt-knapp");
+    const slettKnapp = document.getElementById("slett-knapp");
+    const redigeringVarsel = document.getElementById("redigering-varsel");
+    const editorLabel = document.getElementById("editor-label-tekst");
+
+    function oppdaterOrdteller() {
+      const tekst = input.value.trim();
+      const antall = tekst === "" ? 0 : tekst.split(/\s+/).length;
+      const wc = document.getElementById("wordcount");
+      wc.textContent = antall === 0 ? "" : antall + " ord";
+      wc.className = "wordcount" + (antall >= 300 ? " over" : antall >= 250 ? " warn" : "");
+    }
+
+    function settRedigeringsmodus(aktiv) {
+      avbrytKnapp.style.display = aktiv ? "inline-block" : "none";
+      slettKnapp.style.display = aktiv ? "inline-block" : "none";
+      redigeringVarsel.style.display = aktiv ? "inline" : "none";
+      lagreKnapp.textContent = aktiv ? "Oppdater notat" : "Lagre notat";
+      editorLabel.textContent = aktiv ? "Rediger notat" : "Nytt notat";
+    }
+
+    function nullstillSkjema() {
+      input.value = "";
+      valgteEtiketter = [];
+      redigerNotatId = null;
+      settRedigeringsmodus(false);
+      oppdaterOrdteller();
+      visEtiketter();
+      visNotater();
+    }
+
+    lagreKnapp.addEventListener("click", function () {
+      const tekst = input.value.trim();
+      if (tekst === "") {
+        alert("Skriv noe før du lagrer.");
+        return;
+      }
+
+      const notater = hentNotater();
+
+      if (redigerNotatId !== null) {
+        const index = notater.findIndex(function (n) { return n.id === redigerNotatId; });
+        if (index === -1) {
+          alert("Notatet ble ikke funnet – det kan ha blitt slettet.");
+          nullstillSkjema();
+          return;
+        }
+        notater[index].tekst = tekst;
+        notater[index].etiketter = valgteEtiketter.slice();
+        notater[index].redigertDato = new Date().toLocaleString("nb-NO", {
+          day: "numeric", month: "long", year: "numeric",
+          hour: "2-digit", minute: "2-digit"
+        });
+      } else {
+        notater.push({
+          id: Date.now(),
+          tekst: tekst,
+          etiketter: valgteEtiketter.slice(),
+          dato: new Date().toLocaleString("nb-NO", {
+            day: "numeric", month: "long", year: "numeric",
+            hour: "2-digit", minute: "2-digit"
+          })
+        });
+      }
+
+      lagreNotater(notater);
+      nullstillSkjema();
+    });
+
+    avbrytKnapp.addEventListener("click", function () {
+      nullstillSkjema();
+    });
+
+    slettKnapp.addEventListener("click", function () {
+      if (redigerNotatId === null) return;
+      const bekreft = confirm("Er du sikker på at du vil slette dette notatet? Dette kan ikke angres.");
+      if (!bekreft) return;
+
+      const notater = hentNotater().filter(function (n) { return n.id !== redigerNotatId; });
+      lagreNotater(notater);
+      nullstillSkjema();
+    });
+
+    input.addEventListener("input", function () {
+      oppdaterOrdteller();
+    });
+
+    document.getElementById("legg-til-etikett-knapp").addEventListener("click", function () {
+      leggTilEtikett(document.getElementById("ny-etikett-input").value);
+    });
+
+    document.getElementById("ny-etikett-input").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") leggTilEtikett(this.value);
+    });
+
+    // --- Notatliste ---
+
+    function visNotater() {
+      const alleNotater = hentNotater();
+      const notater = filtrerNotater(alleNotater);
+      const liste = document.getElementById("notat-liste");
+      const tittel = document.getElementById("liste-tittel");
+
+      liste.innerHTML = "";
+
+      if (alleNotater.length === 0) {
+        tittel.textContent = "";
+        liste.innerHTML = '<div class="empty-state"><p class="headline">Ingen notater</p><p>Skriv ditt første notat ovenfor.</p></div>';
+        return;
+      }
+
+      if (søkeTekst && notater.length === 0) {
+        tittel.textContent = "Ingen notater matcher søket";
+        return;
+      }
+
+      if (søkeTekst) {
+        tittel.textContent = notater.length === 1
+          ? "1 notat matcher søket"
+          : notater.length + " notater matcher søket";
+      } else {
+        tittel.textContent = alleNotater.length === 1
+          ? "1 lagret notat"
+          : alleNotater.length + " lagrede notater";
+      }
+
+      const sortert = [...notater].sort(function (a, b) {
+        return sorteringsRekkefølge === "nyest" ? b.id - a.id : a.id - b.id;
+      });
+
+      sortert.forEach(function (notat) {
+        const etikettListe = notat.etiketter
+          ? notat.etiketter
+          : (notat.etikett ? [notat.etikett] : []);
+
+        const kort = document.createElement("div");
+        kort.className = "note-card" + (notat.id === redigerNotatId ? " editing" : "");
+
+        if (etikettListe.length > 0) {
+          kort.style.borderLeftColor = hentFargeForNavn(etikettListe[0]);
+        }
+
+        const meta = document.createElement("div");
+        meta.className = "note-meta";
+
+        if (notat.dato) {
+          const dato = document.createElement("span");
+          dato.className = "note-date";
+          dato.textContent = notat.dato;
+          meta.appendChild(dato);
+        }
+
+        if (notat.redigertDato) {
+          const redigert = document.createElement("span");
+          redigert.className = "note-edited-date";
+          redigert.textContent = "Redigert " + notat.redigertDato;
+          meta.appendChild(redigert);
+        }
+
+        etikettListe.forEach(function (navn) {
+          const merke = document.createElement("span");
+          merke.className = "note-label-badge";
+          const farge = hentFargeForNavn(navn);
+          const r = parseInt(farge.slice(1, 3), 16);
+          const g = parseInt(farge.slice(3, 5), 16);
+          const b = parseInt(farge.slice(5, 7), 16);
+          merke.style.color = farge;
+          merke.style.backgroundColor = "rgba(" + r + "," + g + "," + b + ",0.12)";
+          merke.textContent = navn.charAt(0).toUpperCase() + navn.slice(1);
+          merke.addEventListener("click", function (e) {
+            e.stopPropagation();
+            const scrollY = window.scrollY;
+            søkInput.value = navn;
+            søkeTekst = navn.toLowerCase();
+            søkDatoInput.value = "";
+            søkKalenderKnapp.classList.remove("aktiv");
+            søkTømKnapp.style.display = "inline-block";
+            visNotater();
+            window.scrollTo({ top: scrollY });
+          });
+          meta.appendChild(merke);
+        });
+
+        const tekst = document.createElement("p");
+        tekst.className = "note-text";
+        tekst.textContent = notat.tekst;
+
+        kort.appendChild(meta);
+        kort.appendChild(tekst);
+
+        kort.addEventListener("click", function () {
+          redigerNotatId = notat.id;
+          valgteEtiketter = notat.etiketter
+            ? notat.etiketter.slice()
+            : (notat.etikett ? [notat.etikett] : []);
+          input.value = notat.tekst;
+          settRedigeringsmodus(true);
+          oppdaterOrdteller();
+          visEtiketter();
+          visNotater();
+          input.focus();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+
+        kort.addEventListener("contextmenu", function (e) {
+          åpneKontekstMeny(e, notat.id);
+        });
+
+        liste.appendChild(kort);
+      });
+    }
+
+    // --- Høyreklikkmeny ---
+
+    let kontekstNotatId = null;
+    const kontekstMeny = document.getElementById("kontekst-meny");
+
+    function lukkKontekstMeny() {
+      kontekstMeny.classList.remove("synlig");
+      kontekstNotatId = null;
+    }
+
+    function åpneKontekstMeny(e, notatId) {
+      e.preventDefault();
+      e.stopPropagation();
+      kontekstNotatId = notatId;
+
+      const menyBredde = 180;
+      const menyHøyde = 80;
+      const justerX = (e.clientX + menyBredde > window.innerWidth) ? e.clientX - menyBredde : e.clientX;
+      const justerY = (e.clientY + menyHøyde > window.innerHeight) ? e.clientY - menyHøyde : e.clientY;
+
+      kontekstMeny.style.left = justerX + "px";
+      kontekstMeny.style.top = justerY + "px";
+      kontekstMeny.classList.add("synlig");
+    }
+
+    document.getElementById("km-rediger").addEventListener("click", function () {
+      if (kontekstNotatId === null) return;
+      const notat = hentNotater().find(function (n) { return n.id === kontekstNotatId; });
+      if (!notat) return;
+
+      redigerNotatId = notat.id;
+      valgteEtiketter = notat.etiketter ? notat.etiketter.slice() : (notat.etikett ? [notat.etikett] : []);
+      input.value = notat.tekst;
+      settRedigeringsmodus(true);
+      oppdaterOrdteller();
+      visEtiketter();
+      visNotater();
+      input.focus();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      lukkKontekstMeny();
+    });
+
+    document.getElementById("km-slett").addEventListener("click", function () {
+      if (kontekstNotatId === null) return;
+      const idSomSlettes = kontekstNotatId;
+      lukkKontekstMeny();
+      const bekreft = confirm("Er du sikker på at du vil slette dette notatet? Dette kan ikke angres.");
+      if (!bekreft) return;
+
+      const notater = hentNotater().filter(function (n) { return n.id !== idSomSlettes; });
+      lagreNotater(notater);
+      if (redigerNotatId === idSomSlettes) {
+        nullstillSkjema();
+      } else {
+        visNotater();
+      }
+    });
+
+    document.addEventListener("click", function () {
+      lukkKontekstMeny();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") lukkKontekstMeny();
+    });
+    document.addEventListener("scroll", lukkKontekstMeny, true);
+
+    document.addEventListener("click", function () {
+      const dropInnhold = document.getElementById("etikett-dropdown-innhold");
+      if (dropInnhold) dropInnhold.classList.remove("aapen");
+    });
+
+    // Sortering
+    document.getElementById("sorter-knapp").addEventListener("click", function () {
+      sorteringsRekkefølge = sorteringsRekkefølge === "nyest" ? "eldst" : "nyest";
+      this.textContent = sorteringsRekkefølge === "nyest" ? "Nyeste først ▾" : "Eldste først ▲";
+      this.classList.toggle("active", sorteringsRekkefølge === "eldst");
+      visNotater();
+    });
+
+    // Søk
+    const søkInput = document.getElementById("søk-input");
+    const søkTømKnapp = document.getElementById("søk-tøm-knapp");
+    const søkKalenderKnapp = document.getElementById("søk-kalender-knapp");
+    const søkDatoInput = document.getElementById("søk-dato-input");
+
+    søkInput.addEventListener("input", function () {
+      søkeTekst = this.value.trim().toLowerCase();
+      søkTømKnapp.style.display = søkeTekst ? "inline-block" : "none";
+      søkDatoInput.value = "";
+      søkKalenderKnapp.classList.remove("aktiv");
+      visNotater();
+    });
+
+    søkTømKnapp.addEventListener("click", function () {
+      søkInput.value = "";
+      søkeTekst = "";
+      søkDatoInput.value = "";
+      søkKalenderKnapp.classList.remove("aktiv");
+      søkTømKnapp.style.display = "none";
+      visNotater();
+      søkInput.focus();
+    });
+
+    søkKalenderKnapp.addEventListener("click", function () {
+      if (søkDatoInput.showPicker) {
+        søkDatoInput.showPicker();
+      } else {
+        søkDatoInput.click();
+      }
+    });
+
+    søkDatoInput.addEventListener("change", function () {
+      if (!this.value) return;
+      const dato = new Date(this.value + "T00:00:00");
+      const datoTekst = dato.toLocaleDateString("nb-NO", { day: "numeric", month: "long", year: "numeric" });
+      søkInput.value = datoTekst;
+      søkeTekst = datoTekst.toLowerCase();
+      søkTømKnapp.style.display = "inline-block";
+      søkKalenderKnapp.classList.add("aktiv");
+      visNotater();
+    });
+
+    // Start
+    visEtiketter();
+    visNotater();
+  </script>
+
+</body>
+</html>
