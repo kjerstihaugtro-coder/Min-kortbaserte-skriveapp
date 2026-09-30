@@ -29,6 +29,10 @@ Prosjektet er én enkelt fil: `notatapp.html`. Ingen rammeverk, ren HTML/CSS/JS 
   - Importer: leser en slik fil, bekreftelsesdialog, overskriver alt og laster siden på nytt
   - Formålet: localStorage flytter seg ikke automatisk ved PC-bytte — denne funksjonen gjør det mulig å ta med seg alle data manuelt
 
+### Viktig om localStorage og `file://`
+- Chrome (og trolig andre nettlesere) deler `localStorage` for ALLE `file://`-sider i én felles opprinnelse (`file://` uten host/sti) — altså IKKE partisjonert per mappeplassering. Åpning av `notatapp.html` fra ulike mapper på samme maskin/profil/nettleser gir tilgang til samme lagrede data.
+- **PC-bytte 2026-09-30:** Under migrering viste det seg at et eldre notatarkiv (flere disposisjoner) ikke lenger fantes i noen nettleserprofil — bekreftet ved direkte lesing av Chrome/Edge sine LevelDB-lagringsfiler på disk. Dataene var borte fra localStorage før noen eksport/import-handling ble utført den dagen (trolig en tidligere "Slett nettleserdata" e.l., ikke en feil i eksport/import-funksjonen). Viste seg å være testinnhold — ikke reelt tap. Lærdom: eksporter jevnlig som sikkerhetskopi, ikke bare rett før en PC-bytte.
+
 ### Designretning
 - Jordfarger: bakgrunn `#f5f0eb`, grønn `#7a9e7e`, Georgia serif
 - Handlingsknapper: glassmorphism-inspirert — `rgba`-bakgrunn med lav opacity, `backdrop-filter: blur(4px)`, border-radius 8px
