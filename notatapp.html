@@ -36,7 +36,7 @@
       );
     }
 
-    h1, .headline { font-family: 'Playfair Display', serif; }
+    h1, .headline { font-family: 'Source Sans 3', sans-serif; }
 
     /* Masthead */
     .edition-bar {
@@ -82,6 +82,13 @@
       padding-left: 1rem;
     }
 
+    .backup-rad {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-left: auto;
+    }
+
     /* Layout */
     .main { max-width: 860px; margin: 0 auto; padding: 1.5rem; }
 
@@ -104,20 +111,70 @@
       margin-bottom: 0.5rem;
     }
 
-    textarea {
+    /* Format toolbar */
+    .format-toolbar {
+      display: flex;
+      gap: 2px;
+      align-items: center;
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid var(--cream);
+    }
+
+    .fmt-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      padding: 3px 9px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--muted);
+      font-family: 'Source Sans 3', sans-serif;
+      transition: all .1s;
+      line-height: 1.5;
+      user-select: none;
+    }
+
+    .fmt-btn:hover { border-color: var(--rule); color: var(--ink); background: var(--cream); }
+    .fmt-btn.aktiv { background: var(--cream); border-color: var(--ink); color: var(--ink); }
+
+    .fmt-skillelinje {
+      width: 1px;
+      height: 18px;
+      background: var(--rule);
+      margin: 0 4px;
+      flex-shrink: 0;
+    }
+
+    .notat-input-rike {
       width: 100%;
-      border: none;
-      outline: none;
-      resize: none;
+      min-height: 100px;
       font-family: 'Source Sans 3', sans-serif;
       font-size: 15px;
       line-height: 1.7;
       color: var(--ink);
       background: transparent;
-      min-height: 100px;
+      outline: none;
+      cursor: text;
     }
 
-    textarea::placeholder { color: #b8ae9a; }
+    .notat-input-rike:empty::before {
+      content: "Begynn å skrive her...";
+      color: #b8ae9a;
+      pointer-events: none;
+      display: block;
+    }
+
+    .notat-input-rike ul { padding-left: 1.5em; margin: 0.2em 0; }
+    .notat-input-rike li { margin: 0.1em 0; }
+    .notat-input-rike h2 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.3;
+      margin: 0.4em 0 0.1em;
+      color: var(--ink);
+    }
 
     .editor-footer {
       display: flex;
@@ -172,6 +229,11 @@
 
     /* Etiketter */
     .etikett-valg { margin-top: 1rem; }
+    .kilde-rad { margin-top: 1rem; }
+    .kilde-rad input { width: 100%; padding: 0.4rem 0.6rem; border: 1px solid var(--rule); border-radius: 4px; font-size: 0.85rem; background: var(--bg); color: var(--tekst); box-sizing: border-box; }
+    .note-kilde { margin-top: 0.5rem; font-size: 0.78rem; color: var(--muted); word-break: break-all; }
+    .note-kilde a { color: var(--accent); text-decoration: none; }
+    .note-kilde a:hover { text-decoration: underline; }
 
     .label-row { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
 
@@ -350,18 +412,63 @@
     .sort-btn:hover { border-color: var(--ink); color: var(--ink); }
     .sort-btn.active { background: var(--cream); border-color: var(--ink); color: var(--ink); }
 
+    .liste-header-kontroller { display: flex; gap: 0.4rem; align-items: center; }
+
     /* Notatkort */
     .note-grid { display: flex; flex-direction: column; gap: 0.75rem; }
+    .note-grid.kortvisning {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 0.75rem;
+      align-items: start;
+    }
+    .note-grid.kortvisning .note-text {
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+    }
+    .note-grid.kortvisning .note-card {
+      padding: 0.6rem 0.9rem;
+      padding-right: 2.2rem;
+    }
+    .note-grid.kortvisning .favoritt-knapp {
+      top: 0.45rem;
+      right: 0.55rem;
+    }
+    .note-grid.kortvisning .note-meta {
+      margin-bottom: 0.3rem;
+      flex-wrap: nowrap;
+      overflow: hidden;
+    }
+    .note-grid.kortvisning .note-kilde { display: none; }
+    .note-grid.kortvisning .note-date { display: none; }
+    .note-grid.kortvisning .note-edited-date { display: none; }
 
     .note-card {
       background: white;
       border: 1px solid var(--rule);
       border-left: 3px solid var(--rule);
       padding: 1rem 1.25rem;
+      padding-right: 2.5rem;
       box-shadow: 0 1px 3px rgba(0,0,0,0.04);
       transition: box-shadow .15s;
       cursor: pointer;
+      position: relative;
     }
+    .favoritt-knapp {
+      position: absolute;
+      top: 0.7rem;
+      right: 0.75rem;
+      background: none;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      color: #ccc;
+      line-height: 1;
+      padding: 2px;
+      transition: color .12s, transform .1s;
+    }
+    .favoritt-knapp:hover { color: #f5a623; transform: scale(1.2); }
+    .favoritt-knapp.aktiv { color: #f5a623; }
 
     .note-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
     .note-card.editing { border-left-color: var(--accent); background: #fffdf9; }
@@ -387,6 +494,39 @@
 
     .note-label-badge:hover { opacity: 0.72; }
 
+    .etikett-filter-omrade {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 10px 0 4px;
+      align-items: center;
+    }
+    .filter-etikett-knapp {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 2px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: opacity .12s, background .12s;
+      background: none;
+    }
+    .filter-etikett-knapp:hover { opacity: 0.75; }
+    .filter-tøm-knapp {
+      font-size: 10px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      background: none;
+      color: var(--muted);
+      cursor: pointer;
+      margin-left: 4px;
+    }
+    .filter-tøm-knapp:hover { color: var(--tekst); }
+
     .note-date { font-size: 11px; color: var(--muted); }
 
     .note-edited-date {
@@ -406,6 +546,11 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
+
+    .note-text ul { padding-left: 1.2em; }
+    .note-text b, .note-text strong { font-weight: 700; }
+    .note-text i, .note-text em { font-style: italic; }
+    .note-text h2 { font-family: 'Source Sans 3', sans-serif; font-size: 14px; font-weight: 600; }
 
     /* Tom liste */
     .empty-state {
@@ -455,6 +600,428 @@
       background-color: var(--rule);
       margin: 4px 0;
     }
+    /* Modus-navigasjon */
+    .modus-nav {
+      display: flex;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--rule);
+    }
+    .modus-knapp {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 7px 18px;
+      border: none;
+      background: none;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all .12s;
+    }
+    .modus-knapp:hover { color: var(--ink); }
+    .modus-knapp.aktiv { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* Disposisjon */
+    .disp-layout {
+      display: grid;
+      grid-template-columns: 30% 45% 25%;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .main.disp-modus { max-width: none; }
+    .disp-tittel-input {
+      display: block;
+      width: 100%;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      border: none;
+      border-bottom: 2px solid var(--rule);
+      background: transparent;
+      color: var(--ink);
+      padding: 0.4rem 0;
+      margin-bottom: 1.25rem;
+      outline: none;
+    }
+    .disp-tittel-input:focus { border-bottom-color: var(--accent); }
+    .disp-tittel-input::placeholder { color: var(--rule); }
+
+    .disp-seksjon {
+      background: white;
+      border: 1px solid var(--rule);
+      border-top: 2px solid var(--accent);
+      margin-bottom: 0.75rem;
+      transition: opacity 0.15s;
+    }
+    .disp-seksjon.dragging { opacity: 0.45; }
+    .disp-seksjon.drag-over { border-top: 3px solid var(--accent); box-shadow: 0 -2px 0 0 var(--accent); }
+    .disp-seksjon.kollapset .disp-dropzone { display: none; }
+    .disp-seksjon-kollaps {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 0 0.15rem;
+      line-height: 1;
+      flex-shrink: 0;
+      transition: transform 0.15s;
+      transform: rotate(0deg);
+    }
+    .disp-seksjon.kollapset .disp-seksjon-kollaps { transform: rotate(-90deg); }
+    .disp-seksjon-kollaps:hover { color: var(--ink); }
+    .disp-kollaps-alle-knapp {
+      display: block;
+      margin-left: auto;
+      margin-bottom: 0.5rem;
+      padding: 0.2rem 0.6rem;
+      font-size: 12px;
+      font-family: 'Source Sans 3', sans-serif;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      background: none;
+      cursor: pointer;
+      color: var(--muted);
+    }
+    .disp-kollaps-alle-knapp:hover { color: var(--ink); border-color: var(--muted); }
+    .disp-sjanger-rad {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .disp-sjanger-knapp {
+      padding: 0.25rem 0.8rem;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      background: none;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      color: var(--muted);
+      transition: background 0.12s, color 0.12s, border-color 0.12s;
+    }
+    .disp-sjanger-knapp:hover:not(.aktiv) { background: rgba(0,0,0,0.04); color: var(--ink); }
+    .disp-sjanger-knapp.aktiv { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .disp-sjanger-tagg {
+      display: none;
+      padding: 0.12rem 0.55rem;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      background: var(--ink);
+      color: #fff;
+      margin-bottom: 0.6rem;
+    }
+    .disp-seksjon-handle {
+      cursor: grab;
+      color: var(--rule);
+      font-size: 15px;
+      line-height: 1;
+      padding-right: 0.25rem;
+      user-select: none;
+      flex-shrink: 0;
+    }
+    .disp-seksjon-handle:hover { color: var(--muted); }
+    .disp-seksjon-handle:active { cursor: grabbing; }
+    .disp-seksjon-header {
+      display: flex;
+      align-items: center;
+      padding: 0.45rem 0.75rem;
+      border-bottom: 1px solid var(--cream);
+      gap: 0.5rem;
+    }
+    .disp-seksjon-navn {
+      flex: 1;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: none;
+      background: none;
+      outline: none;
+      font-family: 'Source Sans 3', sans-serif;
+      cursor: text;
+    }
+    .disp-seksjon-navn:focus { color: var(--ink); }
+    .disp-seksjon-slett {
+      background: none;
+      border: none;
+      color: var(--rule);
+      cursor: pointer;
+      font-size: 13px;
+      padding: 1px 4px;
+      line-height: 1;
+      transition: color .1s;
+    }
+    .disp-seksjon-slett:hover { color: var(--accent); }
+
+    .disp-dropzone {
+      min-height: 56px;
+      padding: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      transition: background .12s;
+    }
+    .disp-dropzone.drag-over { background: var(--accent-soft); }
+    .disp-dropzone .note-card.dragging { opacity: 0.35; }
+    .disp-insert-line {
+      height: 2px;
+      background: var(--accent);
+      border-radius: 1px;
+      margin: 2px 4px;
+      pointer-events: none;
+    }
+    .disp-dropzone:empty::after {
+      content: "Dra notater hit";
+      display: block;
+      text-align: center;
+      color: var(--rule);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.75rem;
+    }
+    .disp-dropzone .note-card {
+      cursor: grab;
+      padding: 0.5rem 0.75rem;
+      padding-right: 1.6rem;
+      font-size: 13px;
+    }
+    .disp-dropzone .note-card:active { cursor: grabbing; }
+    .disp-dropzone .note-card .favoritt-knapp { display: none; }
+    .disp-dropzone .note-card .note-date,
+    .disp-dropzone .note-card .note-edited-date { display: none; }
+    .disp-dropzone .note-card .note-meta { flex-wrap: nowrap; overflow: hidden; margin-bottom: 0.2rem; }
+    .disp-dropzone .note-card .note-text { -webkit-line-clamp: 2; line-clamp: 2; font-size: 13px; }
+    .disp-dropzone .note-card .note-kilde { display: none; }
+
+    /* Venstre kolonne */
+    .disp-venstre {
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+      position: sticky;
+      top: 1rem;
+    }
+
+    /* Midtkolonne rutenett */
+    .disp-midt-rutenett {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.5rem;
+      max-height: calc(100vh - 200px);
+      overflow-y: auto;
+    }
+    .disp-midt-rutenett .note-card {
+      cursor: grab;
+      padding: 0.6rem 0.85rem;
+      font-size: 13px;
+    }
+    .disp-midt-rutenett .note-card:active { cursor: grabbing; }
+    .disp-midt-rutenett .note-card .favoritt-knapp { display: none; }
+    .disp-midt-rutenett .note-card .note-date,
+    .disp-midt-rutenett .note-card .note-edited-date { display: none; }
+    .disp-midt-rutenett .note-card .note-meta { flex-wrap: nowrap; overflow: hidden; margin-bottom: 0.25rem; }
+    .disp-midt-rutenett .note-card .note-text {
+      -webkit-line-clamp: 7;
+      line-clamp: 7;
+      font-size: 13px;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .disp-midt-rutenett .note-card .note-kilde { display: none; }
+    .disp-midt-rutenett .note-card.in-use { opacity: 0.35; }
+    .disp-midt-rutenett .note-card.aktiv-forhandsvis {
+      border-left-width: 3px;
+      outline: 2px solid var(--accent-soft);
+      background: #fffdf9;
+    }
+
+    /* Høyrekolonne forhåndsvisning */
+    .disp-forhandsvis {
+      background: white;
+      border: 1px solid var(--rule);
+      border-top: 3px solid var(--accent);
+      padding: 1rem 1.25rem;
+      position: sticky;
+      top: 1rem;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+    }
+    .disp-forhandsvis-header {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      border-bottom: 1px solid var(--cream);
+      padding-bottom: 0.4rem;
+    }
+    .disp-forhandsvis-tom {
+      color: var(--rule);
+      text-align: center;
+      padding: 2.5rem 1rem;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .disp-forhandsvis-etiketter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-bottom: 0.75rem;
+    }
+    .disp-forhandsvis-tekst {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--ink);
+      font-family: 'Source Sans 3', sans-serif;
+      margin-bottom: 0.75rem;
+    }
+    .disp-forhandsvis-tekst b, .disp-forhandsvis-tekst strong { font-weight: 700; }
+    .disp-forhandsvis-tekst i, .disp-forhandsvis-tekst em { font-style: italic; }
+    .disp-forhandsvis-tekst ul { padding-left: 1.2em; }
+    .disp-forhandsvis-tekst h2 { font-family: 'Source Sans 3', sans-serif; font-size: 15px; font-weight: 600; margin: 0.3em 0 0.1em; }
+    .disp-forhandsvis-kilde {
+      font-size: 12px;
+      color: var(--muted);
+      word-break: break-all;
+      border-top: 1px solid var(--cream);
+      padding-top: 0.5rem;
+    }
+    .disp-forhandsvis-kilde a { color: var(--accent); text-decoration: none; }
+    .disp-forhandsvis-kilde a:hover { text-decoration: underline; }
+
+    .disp-nav {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.65rem;
+      border-bottom: 1px solid var(--rule);
+    }
+    .disp-nav-knapp {
+      padding: 0.28rem 0.75rem;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      background: none;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      color: var(--ink);
+      max-width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      transition: background 0.12s;
+    }
+    .disp-nav-knapp:hover:not(.aktiv) { background: rgba(0,0,0,0.04); }
+    .disp-nav-knapp.aktiv { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+    .disp-ny-knapp {
+      padding: 0.28rem 0.6rem;
+      border: 1px dashed var(--rule);
+      border-radius: 4px;
+      background: none;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      color: var(--muted);
+      transition: color 0.12s, border-color 0.12s;
+    }
+    .disp-ny-knapp:hover { color: var(--accent); border-color: var(--accent); }
+    .disp-slett-disp-knapp {
+      margin-left: auto;
+      padding: 0.28rem 0.6rem;
+      border: none;
+      border-radius: 4px;
+      background: none;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--muted);
+      transition: color 0.12s, background 0.12s;
+    }
+    .disp-slett-disp-knapp:hover { color: #c0392b; background: rgba(192,57,43,0.08); }
+    .disp-eksport-knapp {
+      margin-left: auto;
+      padding: 0.28rem 0.75rem;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      background: none;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      color: var(--muted);
+      transition: color 0.12s, border-color 0.12s, background 0.12s;
+    }
+    .disp-eksport-knapp:hover { color: var(--accent); border-color: var(--accent); background: rgba(0,0,0,0.02); }
+
+    .disp-fjern-notat {
+      position: absolute;
+      top: 0.35rem;
+      right: 0.35rem;
+      background: none;
+      border: none;
+      color: var(--rule);
+      cursor: pointer;
+      font-size: 11px;
+      padding: 2px 4px;
+      line-height: 1;
+      transition: color .1s;
+    }
+    .disp-fjern-notat:hover { color: var(--accent); }
+    .disp-legg-til-seksjon { margin-top: 0.25rem; }
+
+    .disp-pool-søk {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-bottom: 0.4rem;
+    }
+    .disp-pool-søk-input {
+      flex: 1;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 12px;
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      padding: 5px 8px;
+      background: white;
+      color: var(--ink);
+      outline: none;
+      min-width: 0;
+    }
+    .disp-pool-søk-input:focus { border-color: var(--ink); }
+    .disp-pool-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 0.5rem;
+      min-height: 0;
+    }
+    .disp-pool-header {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+    }
+    .note-card.dragging { opacity: 0.35; box-shadow: none; }
   </style>
 </head>
 <body>
@@ -464,14 +1031,32 @@
     <div class="masthead-inner">
       <h1>Notatbok</h1>
       <span class="masthead-date" id="masthead-date"></span>
+      <div class="backup-rad">
+        <button class="btn btn-ghost btn-sm" id="eksporter-alt-knapp" title="Last ned alle notater, etiketter og disposisjoner som én backup-fil">Eksporter alt</button>
+        <label class="btn btn-ghost btn-sm" for="importer-alt-input" title="Gjenopprett fra en tidligere eksportert backup-fil" style="cursor:pointer;">Importer</label>
+        <input type="file" id="importer-alt-input" accept="application/json" style="display:none;" />
+      </div>
     </div>
   </header>
 
   <main class="main">
 
+    <div class="modus-nav">
+      <button class="modus-knapp aktiv" id="modus-notater">Notater</button>
+      <button class="modus-knapp" id="modus-disposisjon">Disposisjon</button>
+    </div>
+
     <div class="editor-card">
       <div class="editor-label" id="editor-label-tekst">Nytt notat</div>
-      <textarea id="notat-input" placeholder="Begynn å skrive her..."></textarea>
+      <div class="format-toolbar" id="format-toolbar">
+        <button type="button" class="fmt-btn" data-cmd="bold" title="Fet (Ctrl+B)"><b>F</b></button>
+        <button type="button" class="fmt-btn" data-cmd="italic" title="Kursiv (Ctrl+I)"><i>K</i></button>
+        <span class="fmt-skillelinje"></span>
+        <button type="button" class="fmt-btn" data-cmd="insertUnorderedList" title="Punktliste">• Liste</button>
+        <span class="fmt-skillelinje"></span>
+        <button type="button" class="fmt-btn" id="fmt-h2" title="Overskrift H2">H2</button>
+      </div>
+      <div contenteditable="true" id="notat-input" class="notat-input-rike"></div>
 
       <div class="etikett-valg">
         <p class="editor-label">Etiketter — maks 5 <span id="etikett-teller"></span></p>
@@ -482,12 +1067,18 @@
         </div>
       </div>
 
+      <div class="kilde-rad">
+        <label class="editor-label" for="kilde-input">Kilde</label>
+        <input type="text" id="kilde-input" placeholder="URL eller dokumentnavn..." />
+      </div>
+
       <div class="editor-footer">
         <span class="wordcount" id="wordcount"></span>
         <div class="btn-rad">
           <button class="btn btn-ghost" id="avbryt-knapp" style="display:none;">Avbryt</button>
           <button class="btn btn-danger btn-sm" id="slett-knapp" style="display:none;">Slett</button>
           <button class="btn btn-primary" id="lagre-knapp">Lagre notat</button>
+          <button class="btn btn-ghost" id="lagre-arve-knapp" title="Lagre notatet og start et nytt med samme kilde og etiketter">Lagre og arve</button>
         </div>
       </div>
       <span class="redigering-varsel" id="redigering-varsel">Klikk på et annet notat for å redigere det i stedet</span>
@@ -507,12 +1098,19 @@
       <button class="søk-tøm-knapp" id="søk-tøm-knapp" style="display: none;" title="Tøm søk">✕</button>
     </div>
 
+    <div class="etikett-filter-omrade" id="etikett-filter" style="display:none;"></div>
+
     <div class="liste-header">
       <p class="notat-liste-tittel" id="liste-tittel"></p>
-      <button class="sort-btn" id="sorter-knapp">Nyeste først ▾</button>
+      <div class="liste-header-kontroller">
+        <button class="sort-btn" id="visning-knapp">⊞ Kort</button>
+        <button class="sort-btn" id="sorter-knapp">Nyeste først ▾</button>
+      </div>
     </div>
 
     <div class="note-grid" id="notat-liste"></div>
+
+    <div id="disposisjon-panel" style="display:none;"></div>
 
   </main>
 
@@ -628,12 +1226,12 @@
       const resten = [];
 
       sorterteEtiketter.forEach(function (e) {
-        if (valgteEtiketter.indexOf(e.navn) !== -1 && synlige.length < 4) {
+        if (valgteEtiketter.indexOf(e.navn) !== -1 && synlige.length < 5) {
           synlige.push(e);
         }
       });
       sorterteEtiketter.forEach(function (e) {
-        if (synlige.indexOf(e) === -1 && synlige.length < 4) {
+        if (synlige.indexOf(e) === -1 && synlige.length < 5) {
           synlige.push(e);
         }
       });
@@ -701,6 +1299,65 @@
       visEtiketter();
     }
 
+    // --- Sikkerhetskopi (eksport/import av alt) ---
+
+    function eksporterAlleData() {
+      const data = {};
+      for (let i = 0; i < localStorage.length; i++) {
+        const nøkkel = localStorage.key(i);
+        data[nøkkel] = localStorage.getItem(nøkkel);
+      }
+      const pakke = {
+        app: "notatapp",
+        versjon: 1,
+        eksportert: new Date().toISOString(),
+        data: data
+      };
+      const tekst = JSON.stringify(pakke, null, 2);
+      const blob = new Blob([tekst], { type: "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const dato = new Date().toISOString().slice(0, 10);
+      a.href = url;
+      a.download = "notatapp-backup-" + dato + ".json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importerAlleData(fil) {
+      if (!fil) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        let pakke;
+        try {
+          pakke = JSON.parse(e.target.result);
+        } catch (err) {
+          alert("Klarte ikke å lese fila. Sjekk at det er en gyldig backup-fil fra denne appen.");
+          return;
+        }
+        const data = pakke && pakke.data;
+        if (!data || typeof data !== "object") {
+          alert("Fila ser ikke ut som en gyldig backup-fil.");
+          return;
+        }
+        const advarsel = "Dette vil erstatte alle notater, etiketter og disposisjoner som ligger her nå, med innholdet fra backup-filen \"" + fil.name + "\". Vil du fortsette?";
+        if (!confirm(advarsel)) return;
+        localStorage.clear();
+        Object.keys(data).forEach(function (nøkkel) {
+          localStorage.setItem(nøkkel, data[nøkkel]);
+        });
+        alert("Import fullført. Siden lastes på nytt.");
+        location.reload();
+      };
+      reader.readAsText(fil);
+    }
+
+    document.getElementById("eksporter-alt-knapp").addEventListener("click", eksporterAlleData);
+    document.getElementById("importer-alt-input").addEventListener("change", function () {
+      importerAlleData(this.files[0]);
+      this.value = "";
+    });
+
     // --- Notater ---
 
     function hentNotater() {
@@ -712,18 +1369,44 @@
       localStorage.setItem("notater", JSON.stringify(notater));
     }
 
+    function stripHtml(html) {
+      const tmp = document.createElement("div");
+      tmp.innerHTML = html;
+      return tmp.textContent || tmp.innerText || "";
+    }
+
     function filtrerNotater(notater) {
-      if (!søkeTekst) return notater;
+      let resultat = notater;
+
+      if (filterFavoritter) {
+        resultat = resultat.filter(function (notat) { return notat.favoritt === true; });
+      }
+
+      if (filterEtiketter.length > 0) {
+        resultat = resultat.filter(function (notat) {
+          const etikettListe = notat.etiketter
+            ? notat.etiketter
+            : (notat.etikett ? [notat.etikett] : []);
+          return filterEtiketter.some(function (fe) {
+            return etikettListe.some(function (e) { return e.toLowerCase() === fe.toLowerCase(); });
+          });
+        });
+      }
+
+      if (!søkeTekst) return resultat;
+
       const termer = søkeTekst
         .split(" and ")
         .map(function (t) { return t.trim(); })
         .filter(function (t) { return t !== ""; });
-      return notater.filter(function (notat) {
+
+      return resultat.filter(function (notat) {
         const etikettListe = notat.etiketter
           ? notat.etiketter
           : (notat.etikett ? [notat.etikett] : []);
+        const renTekst = stripHtml(notat.tekst).toLowerCase();
         return termer.every(function (term) {
-          return notat.tekst.toLowerCase().includes(term) ||
+          return renTekst.includes(term) ||
             (notat.dato && notat.dato.toLowerCase().includes(term)) ||
             (notat.redigertDato && notat.redigertDato.toLowerCase().includes(term)) ||
             etikettListe.some(function (e) { return e.toLowerCase().includes(term); });
@@ -737,16 +1420,63 @@
     let redigerNotatId = null;
     let søkeTekst = "";
     let sorteringsRekkefølge = "nyest";
+    let filterEtiketter = [];
+    let filterFavoritter = false;
+    let visningsModus = localStorage.getItem("visning") || "liste";
+    let appModus = "notater";
 
     const input = document.getElementById("notat-input");
+    const kildeInput = document.getElementById("kilde-input");
     const lagreKnapp = document.getElementById("lagre-knapp");
     const avbrytKnapp = document.getElementById("avbryt-knapp");
     const slettKnapp = document.getElementById("slett-knapp");
+
+    let harEndringer = false;
+    input.addEventListener("input", function () { harEndringer = true; });
+    kildeInput.addEventListener("input", function () { harEndringer = true; });
+
+    function lagreAktivtNotat() {
+      if (input.textContent.trim() === "") return;
+      const tekst = input.innerHTML;
+      const kilde = kildeInput.value.trim();
+      const notater = hentNotater();
+      if (redigerNotatId !== null) {
+        const index = notater.findIndex(function (n) { return n.id === redigerNotatId; });
+        if (index !== -1) {
+          notater[index].tekst = tekst;
+          notater[index].kilde = kilde;
+          notater[index].etiketter = valgteEtiketter.slice();
+          notater[index].redigertDato = new Date().toLocaleString("nb-NO", {
+            day: "numeric", month: "long", year: "numeric",
+            hour: "2-digit", minute: "2-digit"
+          });
+        }
+      } else {
+        notater.push({
+          id: Date.now(),
+          tekst: tekst,
+          kilde: kilde,
+          etiketter: valgteEtiketter.slice(),
+          dato: new Date().toLocaleString("nb-NO", {
+            day: "numeric", month: "long", year: "numeric",
+            hour: "2-digit", minute: "2-digit"
+          })
+        });
+      }
+      lagreNotater(notater);
+      harEndringer = false;
+    }
+
+    function sjekkOgBekreftForkast() {
+      if (!harEndringer) return true;
+      if (confirm("Du har ulagrede endringer. Vil du lagre dem?")) lagreAktivtNotat();
+      return true;
+    }
     const redigeringVarsel = document.getElementById("redigering-varsel");
     const editorLabel = document.getElementById("editor-label-tekst");
 
     function oppdaterOrdteller() {
-      const tekst = input.value.trim();
+      const tekst = input.textContent.trim();
       const antall = tekst === "" ? 0 : tekst.split(/\s+/).length;
       const wc = document.getElementById("wordcount");
       wc.textContent = antall === 0 ? "" : antall + " ord";
@@ -762,7 +1492,9 @@
     }
 
     function nullstillSkjema() {
-      input.value = "";
+      input.innerHTML = "";
+      kildeInput.value = "";
+      harEndringer = false;
       valgteEtiketter = [];
       redigerNotatId = null;
       settRedigeringsmodus(false);
@@ -772,44 +1504,30 @@
     }
 
     lagreKnapp.addEventListener("click", function () {
-      const tekst = input.value.trim();
-      if (tekst === "") {
+      if (input.textContent.trim() === "") {
         alert("Skriv noe før du lagrer.");
         return;
       }
-
-      const notater = hentNotater();
-
-      if (redigerNotatId !== null) {
-        const index = notater.findIndex(function (n) { return n.id === redigerNotatId; });
-        if (index === -1) {
-          alert("Notatet ble ikke funnet – det kan ha blitt slettet.");
-          nullstillSkjema();
-          return;
-        }
-        notater[index].tekst = tekst;
-        notater[index].etiketter = valgteEtiketter.slice();
-        notater[index].redigertDato = new Date().toLocaleString("nb-NO", {
-          day: "numeric", month: "long", year: "numeric",
-          hour: "2-digit", minute: "2-digit"
-        });
-      } else {
-        notater.push({
-          id: Date.now(),
-          tekst: tekst,
-          etiketter: valgteEtiketter.slice(),
-          dato: new Date().toLocaleString("nb-NO", {
-            day: "numeric", month: "long", year: "numeric",
-            hour: "2-digit", minute: "2-digit"
-          })
-        });
-      }
-
-      lagreNotater(notater);
+      lagreAktivtNotat();
       nullstillSkjema();
     });
 
+    document.getElementById("lagre-arve-knapp").addEventListener("click", function () {
+      if (input.textContent.trim() === "") {
+        alert("Skriv noe før du lagrer.");
+        return;
+      }
+      const arvetKilde = kildeInput.value;
+      const arvetEtiketter = valgteEtiketter.slice();
+      lagreAktivtNotat();
+      nullstillSkjema();
+      kildeInput.value = arvetKilde;
+      valgteEtiketter = arvetEtiketter;
+      visEtiketter();
+    });
+
     avbrytKnapp.addEventListener("click", function () {
+      if (!sjekkOgBekreftForkast()) return;
       nullstillSkjema();
     });
 
@@ -823,8 +1541,19 @@
       nullstillSkjema();
     });
 
-    input.addEventListener("input", function () {
-      oppdaterOrdteller();
+    input.addEventListener("input", oppdaterOrdteller);
+
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && e.shiftKey) {
+        e.preventDefault();
+        document.execCommand("insertLineBreak");
+      }
+      if (e.key === "2" && e.ctrlKey) {
+        e.preventDefault();
+        const erH2 = document.queryCommandValue("formatBlock").toLowerCase() === "h2";
+        document.execCommand("formatBlock", false, erH2 ? "div" : "h2");
+        oppdaterFmtKnapperStatus();
+      }
     });
 
     document.getElementById("legg-til-etikett-knapp").addEventListener("click", function () {
@@ -837,7 +1566,233 @@
 
     // --- Notatliste ---
 
+    function lagNotatKort(notat) {
+      const etikettListe = (notat.etiketter
+        ? notat.etiketter
+        : (notat.etikett ? [notat.etikett] : [])
+      ).slice().sort(function (a, b) {
+        const aktivListe = appModus === "disposisjon" ? dispPoolFilterEtiketter : filterEtiketter;
+        const aAktiv = aktivListe.indexOf(a) !== -1 ? 0 : 1;
+        const bAktiv = aktivListe.indexOf(b) !== -1 ? 0 : 1;
+        return aAktiv - bAktiv;
+      });
+
+      const kort = document.createElement("div");
+      kort.className = "note-card" + (notat.id === redigerNotatId ? " editing" : "");
+
+      if (etikettListe.length > 0) {
+        kort.style.borderLeftColor = hentFargeForNavn(etikettListe[0]);
+      }
+
+      const stjerne = document.createElement("button");
+      stjerne.className = "favoritt-knapp" + (notat.favoritt ? " aktiv" : "");
+      stjerne.textContent = notat.favoritt ? "★" : "☆";
+      stjerne.title = notat.favoritt ? "Fjern favoritt" : "Merk som favoritt";
+      stjerne.addEventListener("click", function (e) {
+        e.stopPropagation();
+        const alleNotater = hentNotater();
+        const idx = alleNotater.findIndex(function (n) { return n.id === notat.id; });
+        if (idx !== -1) {
+          alleNotater[idx].favoritt = !alleNotater[idx].favoritt;
+          lagreNotater(alleNotater);
+          if (appModus === "disposisjon") { visDisposisjon(); } else { visNotater(); }
+        }
+      });
+      kort.appendChild(stjerne);
+
+      const meta = document.createElement("div");
+      meta.className = "note-meta";
+
+      if (notat.dato) {
+        const dato = document.createElement("span");
+        dato.className = "note-date";
+        dato.textContent = notat.dato;
+        meta.appendChild(dato);
+      }
+
+      if (notat.redigertDato) {
+        const redigert = document.createElement("span");
+        redigert.className = "note-edited-date";
+        redigert.textContent = "Redigert " + notat.redigertDato;
+        meta.appendChild(redigert);
+      }
+
+      etikettListe.forEach(function (navn) {
+        const merke = document.createElement("span");
+        merke.className = "note-label-badge";
+        const farge = hentFargeForNavn(navn);
+        const r = parseInt(farge.slice(1, 3), 16);
+        const g = parseInt(farge.slice(3, 5), 16);
+        const b = parseInt(farge.slice(5, 7), 16);
+        merke.style.color = farge;
+        if (filterEtiketter.length > 0 && filterEtiketter.indexOf(navn) !== -1) {
+          merke.style.backgroundColor = "rgba(" + r + "," + g + "," + b + ",0.25)";
+          merke.style.outline = "1.5px solid " + farge;
+          merke.style.fontWeight = "700";
+        } else if (filterEtiketter.length > 0) {
+          merke.style.backgroundColor = "rgba(" + r + "," + g + "," + b + ",0.06)";
+          merke.style.opacity = "0.45";
+        } else {
+          merke.style.backgroundColor = "rgba(" + r + "," + g + "," + b + ",0.12)";
+        }
+        merke.textContent = navn.charAt(0).toUpperCase() + navn.slice(1);
+        merke.addEventListener("click", function (e) {
+          e.stopPropagation();
+          if (appModus === "disposisjon") return;
+          const scrollY = window.scrollY;
+          søkInput.value = navn;
+          søkeTekst = navn.toLowerCase();
+          søkDatoInput.value = "";
+          søkKalenderKnapp.classList.remove("aktiv");
+          søkTømKnapp.style.display = "inline-block";
+          visNotater();
+          window.scrollTo({ top: scrollY });
+        });
+        meta.appendChild(merke);
+      });
+
+      const tekst = document.createElement("div");
+      tekst.className = "note-text";
+      tekst.innerHTML = notat.tekst;
+
+      kort.appendChild(meta);
+      kort.appendChild(tekst);
+
+      if (notat.kilde) {
+        const kildeEl = document.createElement("div");
+        kildeEl.className = "note-kilde";
+        const erUrl = notat.kilde.startsWith("http://") || notat.kilde.startsWith("https://");
+        if (erUrl) {
+          const lenke = document.createElement("a");
+          lenke.href = notat.kilde;
+          lenke.target = "_blank";
+          lenke.rel = "noopener noreferrer";
+          lenke.textContent = notat.kilde;
+          lenke.addEventListener("click", function (e) { e.stopPropagation(); });
+          kildeEl.appendChild(document.createTextNode("Kilde: "));
+          kildeEl.appendChild(lenke);
+        } else {
+          kildeEl.textContent = "Kilde: " + notat.kilde;
+        }
+        kort.appendChild(kildeEl);
+      }
+
+      kort.addEventListener("click", function () {
+        if (appModus === "disposisjon") {
+          if (kort.dataset.context !== "midt") kort.classList.toggle("utvidet");
+          return;
+        }
+        if (!sjekkOgBekreftForkast()) return;
+        redigerNotatId = notat.id;
+        valgteEtiketter = notat.etiketter
+          ? notat.etiketter.slice()
+          : (notat.etikett ? [notat.etikett] : []);
+        input.innerHTML = notat.tekst;
+        kildeInput.value = notat.kilde || "";
+        settRedigeringsmodus(true);
+        oppdaterOrdteller();
+        visEtiketter();
+        visNotater();
+        input.focus();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      kort.addEventListener("contextmenu", function (e) {
+        if (appModus === "disposisjon") return;
+        åpneKontekstMeny(e, notat.id);
+      });
+
+      return kort;
+    }
+
+    function visFilterEtiketter() {
+      const alleNotater = hentNotater();
+      const brukte = {};
+      alleNotater.forEach(function (notat) {
+        const liste = notat.etiketter
+          ? notat.etiketter
+          : (notat.etikett ? [notat.etikett] : []);
+        liste.forEach(function (navn) { brukte[navn] = true; });
+      });
+
+      const navnListe = Object.keys(brukte).sort();
+      const container = document.getElementById("etikett-filter");
+      container.innerHTML = "";
+
+      if (navnListe.length === 0) {
+        container.style.display = "none";
+        return;
+      }
+
+      container.style.display = "flex";
+
+      const favKnapp = document.createElement("button");
+      favKnapp.className = "filter-etikett-knapp" + (filterFavoritter ? " aktiv" : "");
+      favKnapp.textContent = "★ Favoritter";
+      if (filterFavoritter) {
+        favKnapp.style.backgroundColor = "#f5a623";
+        favKnapp.style.borderColor = "#f5a623";
+        favKnapp.style.color = "#fff";
+      } else {
+        favKnapp.style.color = "#f5a623";
+        favKnapp.style.borderColor = "rgba(245,166,35,0.35)";
+        favKnapp.style.backgroundColor = "rgba(245,166,35,0.08)";
+      }
+      favKnapp.addEventListener("click", function () {
+        filterFavoritter = !filterFavoritter;
+        visNotater();
+      });
+      container.appendChild(favKnapp);
+
+      navnListe.forEach(function (navn) {
+        const farge = hentFargeForNavn(navn);
+        const erAktiv = filterEtiketter.indexOf(navn) !== -1;
+        const r = parseInt(farge.slice(1, 3), 16);
+        const g = parseInt(farge.slice(3, 5), 16);
+        const b = parseInt(farge.slice(5, 7), 16);
+
+        const knapp = document.createElement("button");
+        knapp.className = "filter-etikett-knapp";
+        knapp.textContent = navn.charAt(0).toUpperCase() + navn.slice(1);
+
+        if (erAktiv) {
+          knapp.style.backgroundColor = farge;
+          knapp.style.borderColor = farge;
+          knapp.style.color = "#fff";
+        } else {
+          knapp.style.color = farge;
+          knapp.style.borderColor = "rgba(" + r + "," + g + "," + b + ",0.35)";
+          knapp.style.backgroundColor = "rgba(" + r + "," + g + "," + b + ",0.08)";
+        }
+
+        knapp.addEventListener("click", function () {
+          const idx = filterEtiketter.indexOf(navn);
+          if (idx !== -1) {
+            filterEtiketter.splice(idx, 1);
+          } else {
+            filterEtiketter.push(navn);
+          }
+          visNotater();
+        });
+
+        container.appendChild(knapp);
+      });
+
+      if (filterEtiketter.length > 0 || filterFavoritter) {
+        const tøm = document.createElement("button");
+        tøm.className = "filter-tøm-knapp";
+        tøm.textContent = "✕ Tøm filter";
+        tøm.addEventListener("click", function () {
+          filterEtiketter = [];
+          filterFavoritter = false;
+          visNotater();
+        });
+        container.appendChild(tøm);
+      }
+    }
+
     function visNotater() {
+      visFilterEtiketter();
       const alleNotater = hentNotater();
       const notater = filtrerNotater(alleNotater);
       const liste = document.getElementById("notat-liste");
@@ -866,39 +1821,548 @@
           : alleNotater.length + " lagrede notater";
       }
 
+      function tellTreff(notat) {
+        if (filterEtiketter.length === 0) return 0;
+        const liste = notat.etiketter ? notat.etiketter : (notat.etikett ? [notat.etikett] : []);
+        return filterEtiketter.filter(function (fe) {
+          return liste.some(function (e) { return e.toLowerCase() === fe.toLowerCase(); });
+        }).length;
+      }
+
       const sortert = [...notater].sort(function (a, b) {
+        const treffDiff = tellTreff(b) - tellTreff(a);
+        if (treffDiff !== 0) return treffDiff;
         return sorteringsRekkefølge === "nyest" ? b.id - a.id : a.id - b.id;
       });
 
       sortert.forEach(function (notat) {
-        const etikettListe = notat.etiketter
-          ? notat.etiketter
-          : (notat.etikett ? [notat.etikett] : []);
+        liste.appendChild(lagNotatKort(notat));
+      });
+    }
 
-        const kort = document.createElement("div");
-        kort.className = "note-card" + (notat.id === redigerNotatId ? " editing" : "");
+    // --- Disposisjon ---
 
-        if (etikettListe.length > 0) {
-          kort.style.borderLeftColor = hentFargeForNavn(etikettListe[0]);
+    const STANDARD_SEKSJONER = ["Ingress", "Åpning", "Midtdel", "Avslutning"];
+
+    function hentAlleDisposisjoner() {
+      const lagret = localStorage.getItem("disp_liste");
+      if (lagret) return JSON.parse(lagret);
+      // Migrer gammelt format
+      const gammel = localStorage.getItem("disposisjon");
+      if (gammel) {
+        const d = JSON.parse(gammel);
+        d.id = Date.now();
+        if (!d.tittel) d.tittel = "Disposisjon 1";
+        const liste = [d];
+        localStorage.setItem("disp_liste", JSON.stringify(liste));
+        localStorage.setItem("disp_aktiv_id", String(d.id));
+        return liste;
+      }
+      const seksjoner = STANDARD_SEKSJONER.map(function (navn, i) {
+        return { id: Date.now() + i, navn: navn, notatIds: [] };
+      });
+      const ny = { id: Date.now(), tittel: "", seksjoner: seksjoner };
+      localStorage.setItem("disp_liste", JSON.stringify([ny]));
+      localStorage.setItem("disp_aktiv_id", String(ny.id));
+      return [ny];
+    }
+
+    function lagreAlleDisposisjoner(liste) {
+      localStorage.setItem("disp_liste", JSON.stringify(liste));
+    }
+
+    function hentAktivDispId() {
+      const id = localStorage.getItem("disp_aktiv_id");
+      const liste = JSON.parse(localStorage.getItem("disp_liste") || "[]");
+      const parsed = id ? parseInt(id, 10) : null;
+      if (parsed && liste.some(function (d) { return d.id === parsed; })) return parsed;
+      return liste.length > 0 ? liste[0].id : null;
+    }
+
+    function settAktivDispId(id) {
+      localStorage.setItem("disp_aktiv_id", String(id));
+    }
+
+    function hentDisposisjon() {
+      const liste = hentAlleDisposisjoner();
+      const aktivId = hentAktivDispId();
+      return liste.find(function (d) { return d.id === aktivId; }) || liste[0];
+    }
+
+    function lagreDisposisjon(disp) {
+      const liste = hentAlleDisposisjoner();
+      const idx = liste.findIndex(function (d) { return d.id === disp.id; });
+      if (idx !== -1) liste[idx] = disp;
+      lagreAlleDisposisjoner(liste);
+    }
+
+    function htmlTilTekst(html) {
+      function nodeTilTekst(node) {
+        if (node.nodeType === 3) return node.textContent;
+        if (node.nodeType !== 1) return "";
+        const tag = node.tagName.toLowerCase();
+        if (tag === "br") return "\n";
+        const barn = Array.from(node.childNodes).map(nodeTilTekst).join("");
+        if (tag === "h2") return "\n" + barn.trim() + "\n\n";
+        if (tag === "li") return "- " + barn.trim() + "\n";
+        if (tag === "ul" || tag === "ol") return barn;
+        if (tag === "p" || tag === "div") return barn ? barn + "\n" : "";
+        return barn;
+      }
+      const tmp = document.createElement("div");
+      tmp.innerHTML = html;
+      return nodeTilTekst(tmp).replace(/\n{3,}/g, "\n\n").trim();
+    }
+
+    function eksporterDisposisjon(disp) {
+      const alleNotater = hentNotater();
+      const linjer = [];
+
+      if (disp.sjanger) {
+        linjer.push(disp.sjanger.toUpperCase());
+        linjer.push("");
+      }
+      linjer.push(disp.tittel || "Uten tittel");
+      linjer.push("");
+
+      disp.seksjoner.forEach(function (seksjon) {
+        linjer.push("=== " + seksjon.navn + " ===");
+        linjer.push("");
+
+        if (seksjon.notatIds.length === 0) {
+          linjer.push("(ingen notater)");
+          linjer.push("");
+        } else {
+          seksjon.notatIds.forEach(function (notatId) {
+            const notat = alleNotater.find(function (n) { return n.id === notatId; });
+            if (!notat) return;
+
+            const innhold = htmlTilTekst(notat.tekst);
+
+            const synligeEtiketter = ["fakta", "sitat", "observasjon"];
+            const etikettListe = notat.etiketter
+              ? notat.etiketter
+              : (notat.etikett ? [notat.etikett] : []);
+            const matchende = etikettListe
+              .filter(function (e) { return synligeEtiketter.indexOf(e.toLowerCase()) !== -1; })
+              .map(function (e) { return e.charAt(0).toUpperCase() + e.slice(1); });
+
+            const nyLinjePos = innhold.indexOf("\n");
+            let tittelLinje, resten;
+            if (nyLinjePos !== -1) {
+              tittelLinje = innhold.substring(0, nyLinjePos).trim();
+              resten = innhold.substring(nyLinjePos + 1).trim();
+            } else {
+              tittelLinje = innhold;
+              resten = "";
+            }
+
+            if (matchende.length > 0) {
+              const etiketterTekst = matchende.map(function (e) { return "[" + e + "]"; }).join(" ");
+              linjer.push(tittelLinje + " " + etiketterTekst);
+            } else {
+              linjer.push(tittelLinje);
+            }
+            if (resten) linjer.push(resten);
+            if (notat.kilde) linjer.push("Kilde: " + notat.kilde);
+            linjer.push("");
+            linjer.push("---");
+            linjer.push("");
+          });
         }
+      });
 
-        const meta = document.createElement("div");
-        meta.className = "note-meta";
+      const tekst = linjer.join("\n");
+      const filnavn = (disp.tittel || "disposisjon").replace(/[\\/:*?"<>|]/g, "-") + ".txt";
+      const blob = new Blob([tekst], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filnavn;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
 
-        if (notat.dato) {
-          const dato = document.createElement("span");
-          dato.className = "note-date";
-          dato.textContent = notat.dato;
-          meta.appendChild(dato);
+    let dragNotatId = null;
+    let dragFraSeksjonId = null;
+    let dragSeksjonId = null;
+    const kollapserteSeksjoner = new Set();
+    let dispPoolSøk = "";
+    let dispPoolFilterEtiketter = [];
+    let aktivtForhåndsvisNotatId = null;
+
+    function lagSeksjonElement(seksjon) {
+      const el = document.createElement("div");
+      el.className = "disp-seksjon";
+
+      const header = document.createElement("div");
+      header.className = "disp-seksjon-header";
+
+      const handle = document.createElement("span");
+      handle.className = "disp-seksjon-handle";
+      handle.textContent = "⠿";
+      handle.title = "Dra for å flytte seksjon";
+      handle.addEventListener("mousedown", function () { el.draggable = true; });
+      handle.addEventListener("mouseup", function () { el.draggable = false; });
+      header.appendChild(handle);
+
+      const navnInput = document.createElement("input");
+      navnInput.type = "text";
+      navnInput.className = "disp-seksjon-navn";
+      navnInput.value = seksjon.navn;
+      navnInput.addEventListener("change", function () {
+        const d = hentDisposisjon();
+        const s = d.seksjoner.find(function (s) { return s.id === seksjon.id; });
+        if (s) { s.navn = this.value; lagreDisposisjon(d); }
+      });
+      header.appendChild(navnInput);
+
+      const slettKnapp = document.createElement("button");
+      slettKnapp.className = "disp-seksjon-slett";
+      slettKnapp.textContent = "✕";
+      slettKnapp.title = "Slett seksjon";
+      slettKnapp.addEventListener("click", function () {
+        const d = hentDisposisjon();
+        const s = d.seksjoner.find(function (s) { return s.id === seksjon.id; });
+        if (s && s.notatIds.length > 0 && !confirm("Seksjonen inneholder notater. Vil du slette den?")) return;
+        d.seksjoner = d.seksjoner.filter(function (s) { return s.id !== seksjon.id; });
+        lagreDisposisjon(d);
+        visDisposisjon();
+      });
+      header.appendChild(slettKnapp);
+
+      const kollapsKnapp = document.createElement("button");
+      kollapsKnapp.className = "disp-seksjon-kollaps";
+      kollapsKnapp.textContent = "▾";
+      kollapsKnapp.title = "Kollaps/ekspander seksjon";
+      if (kollapserteSeksjoner.has(seksjon.id)) el.classList.add("kollapset");
+      kollapsKnapp.addEventListener("click", function (e) {
+        e.stopPropagation();
+        el.classList.toggle("kollapset");
+        if (el.classList.contains("kollapset")) {
+          kollapserteSeksjoner.add(seksjon.id);
+        } else {
+          kollapserteSeksjoner.delete(seksjon.id);
         }
+      });
+      header.appendChild(kollapsKnapp);
+      el.appendChild(header);
 
-        if (notat.redigertDato) {
-          const redigert = document.createElement("span");
-          redigert.className = "note-edited-date";
-          redigert.textContent = "Redigert " + notat.redigertDato;
-          meta.appendChild(redigert);
+      el.addEventListener("dragstart", function (e) {
+        if (e.target.closest(".note-card")) return;
+        if (!el.draggable) return;
+        dragSeksjonId = seksjon.id;
+        el.classList.add("dragging");
+        e.dataTransfer.effectAllowed = "move";
+        e.stopPropagation();
+      });
+      el.addEventListener("dragend", function () {
+        el.draggable = false;
+        dragSeksjonId = null;
+        el.classList.remove("dragging");
+        el.classList.remove("drag-over");
+      });
+      el.addEventListener("dragover", function (e) {
+        if (dragSeksjonId === null || dragSeksjonId === seksjon.id) return;
+        e.preventDefault();
+        e.stopPropagation();
+        el.classList.add("drag-over");
+      });
+      el.addEventListener("dragleave", function (e) {
+        if (!el.contains(e.relatedTarget)) el.classList.remove("drag-over");
+      });
+      el.addEventListener("drop", function (e) {
+        if (dragSeksjonId === null || dragSeksjonId === seksjon.id) return;
+        e.preventDefault();
+        e.stopPropagation();
+        el.classList.remove("drag-over");
+        const d = hentDisposisjon();
+        const fraIdx = d.seksjoner.findIndex(function (s) { return s.id === dragSeksjonId; });
+        const tilIdx = d.seksjoner.findIndex(function (s) { return s.id === seksjon.id; });
+        if (fraIdx === -1 || tilIdx === -1) return;
+        const flyttet = d.seksjoner.splice(fraIdx, 1)[0];
+        d.seksjoner.splice(tilIdx, 0, flyttet);
+        lagreDisposisjon(d);
+        dragSeksjonId = null;
+        visDisposisjon();
+      });
+
+      const dropzone = document.createElement("div");
+      dropzone.className = "disp-dropzone";
+
+      const alleNotater = hentNotater();
+      seksjon.notatIds.forEach(function (notatId) {
+        const notat = alleNotater.find(function (n) { return n.id === notatId; });
+        if (!notat) return;
+        const kort = lagNotatKort(notat);
+        kort.draggable = true;
+        kort.dataset.notatId = notat.id;
+
+        const fjernKnapp = document.createElement("button");
+        fjernKnapp.className = "disp-fjern-notat";
+        fjernKnapp.textContent = "✕";
+        fjernKnapp.title = "Fjern fra seksjon";
+        fjernKnapp.addEventListener("click", function (e) {
+          e.stopPropagation();
+          const d = hentDisposisjon();
+          const s = d.seksjoner.find(function (s) { return s.id === seksjon.id; });
+          if (s) {
+            s.notatIds = s.notatIds.filter(function (id) { return id !== notatId; });
+            lagreDisposisjon(d);
+            visDisposisjon();
+          }
+        });
+        kort.appendChild(fjernKnapp);
+
+        kort.addEventListener("dragstart", function (e) {
+          dragNotatId = notat.id;
+          dragFraSeksjonId = seksjon.id;
+          kort.classList.add("dragging");
+          e.dataTransfer.effectAllowed = "move";
+        });
+        kort.addEventListener("dragend", function () { kort.classList.remove("dragging"); });
+        dropzone.appendChild(kort);
+      });
+
+      const insertLine = document.createElement("div");
+      insertLine.className = "disp-insert-line";
+      insertLine.style.display = "none";
+      dropzone.appendChild(insertLine);
+
+      function finnInsertBeforeKort(musY) {
+        const cards = Array.from(dropzone.querySelectorAll(".note-card:not(.dragging)"));
+        for (let i = 0; i < cards.length; i++) {
+          const rect = cards[i].getBoundingClientRect();
+          if (musY < rect.top + rect.height / 2) return cards[i];
         }
+        return null;
+      }
 
+      dropzone.addEventListener("dragover", function (e) {
+        if (dragSeksjonId !== null) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        const målKort = finnInsertBeforeKort(e.clientY);
+        insertLine.style.display = "block";
+        if (målKort) {
+          dropzone.insertBefore(insertLine, målKort);
+        } else {
+          dropzone.appendChild(insertLine);
+        }
+        dropzone._insertBeforeId = målKort ? parseInt(målKort.dataset.notatId) : null;
+      });
+
+      dropzone.addEventListener("dragleave", function (e) {
+        if (!dropzone.contains(e.relatedTarget)) {
+          insertLine.style.display = "none";
+          dropzone._insertBeforeId = undefined;
+        }
+      });
+
+      dropzone.addEventListener("drop", function (e) {
+        if (dragSeksjonId !== null) return;
+        e.preventDefault();
+        insertLine.style.display = "none";
+        if (dragNotatId === null) return;
+        const d = hentDisposisjon();
+        if (dragFraSeksjonId !== null) {
+          const kilde = d.seksjoner.find(function (s) { return s.id === dragFraSeksjonId; });
+          if (kilde) kilde.notatIds = kilde.notatIds.filter(function (id) { return id !== dragNotatId; });
+        }
+        const mål = d.seksjoner.find(function (s) { return s.id === seksjon.id; });
+        if (mål) {
+          mål.notatIds = mål.notatIds.filter(function (id) { return id !== dragNotatId; });
+          const insertBeforeId = dropzone._insertBeforeId;
+          if (insertBeforeId !== null && insertBeforeId !== undefined) {
+            const idx = mål.notatIds.indexOf(insertBeforeId);
+            mål.notatIds.splice(idx !== -1 ? idx : mål.notatIds.length, 0, dragNotatId);
+          } else {
+            mål.notatIds.push(dragNotatId);
+          }
+        }
+        lagreDisposisjon(d);
+        dragNotatId = null;
+        dragFraSeksjonId = null;
+        visDisposisjon();
+      });
+
+      el.appendChild(dropzone);
+      return el;
+    }
+
+    function renderDispPoolFilter() {
+      const container = document.getElementById("disp-pool-filter");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const alleNotater = hentNotater();
+      const brukte = {};
+      alleNotater.forEach(function (notat) {
+        const liste = notat.etiketter ? notat.etiketter : (notat.etikett ? [notat.etikett] : []);
+        liste.forEach(function (navn) { brukte[navn] = true; });
+      });
+
+      const navnListe = Object.keys(brukte).sort();
+
+      const tøm = document.createElement("button");
+      tøm.className = "filter-tøm-knapp";
+      tøm.textContent = "✕ Tøm";
+      tøm.style.display = dispPoolFilterEtiketter.length > 0 ? "" : "none";
+      tøm.addEventListener("click", function (e) {
+        e.stopPropagation();
+        dispPoolFilterEtiketter = [];
+        container.querySelectorAll(".filter-etikett-knapp").forEach(function (knapp) {
+          const n = knapp.dataset.navn;
+          const f = hentFargeForNavn(n);
+          const r = parseInt(f.slice(1, 3), 16);
+          const g = parseInt(f.slice(3, 5), 16);
+          const b = parseInt(f.slice(5, 7), 16);
+          knapp.style.color = f;
+          knapp.style.borderColor = "rgba(" + r + "," + g + "," + b + ",0.35)";
+          knapp.style.backgroundColor = "rgba(" + r + "," + g + "," + b + ",0.08)";
+        });
+        tøm.style.display = "none";
+        renderDispPoolInhalt();
+      });
+
+      if (navnListe.length === 0) {
+        container.appendChild(tøm);
+        return;
+      }
+
+      navnListe.forEach(function (navn) {
+        const farge = hentFargeForNavn(navn);
+        const erAktiv = dispPoolFilterEtiketter.indexOf(navn) !== -1;
+        const r = parseInt(farge.slice(1, 3), 16);
+        const g = parseInt(farge.slice(3, 5), 16);
+        const b = parseInt(farge.slice(5, 7), 16);
+        const knapp = document.createElement("button");
+        knapp.className = "filter-etikett-knapp";
+        knapp.dataset.navn = navn;
+        knapp.textContent = navn.charAt(0).toUpperCase() + navn.slice(1);
+        if (erAktiv) {
+          knapp.style.backgroundColor = farge;
+          knapp.style.borderColor = farge;
+          knapp.style.color = "#fff";
+        } else {
+          knapp.style.color = farge;
+          knapp.style.borderColor = "rgba(" + r + "," + g + "," + b + ",0.35)";
+          knapp.style.backgroundColor = "rgba(" + r + "," + g + "," + b + ",0.08)";
+        }
+        knapp.addEventListener("click", function (e) {
+          e.stopPropagation();
+          const idx = dispPoolFilterEtiketter.indexOf(navn);
+          if (idx !== -1) {
+            dispPoolFilterEtiketter.splice(idx, 1);
+            knapp.style.color = farge;
+            knapp.style.borderColor = "rgba(" + r + "," + g + "," + b + ",0.35)";
+            knapp.style.backgroundColor = "rgba(" + r + "," + g + "," + b + ",0.08)";
+          } else {
+            dispPoolFilterEtiketter.push(navn);
+            knapp.style.backgroundColor = farge;
+            knapp.style.borderColor = farge;
+            knapp.style.color = "#fff";
+          }
+          tøm.style.display = dispPoolFilterEtiketter.length > 0 ? "" : "none";
+          renderDispPoolInhalt();
+        });
+        container.appendChild(knapp);
+      });
+
+      container.appendChild(tøm);
+    }
+
+    function renderDispPoolInhalt() {
+      const pool = document.getElementById("disp-midt-rutenett");
+      if (!pool) return;
+      pool.innerHTML = "";
+
+      const disp = hentDisposisjon();
+      const brukteIds = [];
+      disp.seksjoner.forEach(function (s) {
+        s.notatIds.forEach(function (id) { brukteIds.push(id); });
+      });
+
+      let notater = hentNotater().filter(function (n) { return brukteIds.indexOf(n.id) === -1; });
+
+      if (dispPoolFilterEtiketter.length > 0) {
+        notater = notater.filter(function (notat) {
+          const liste = notat.etiketter ? notat.etiketter : (notat.etikett ? [notat.etikett] : []);
+          return dispPoolFilterEtiketter.some(function (fe) {
+            return liste.some(function (e) { return e.toLowerCase() === fe.toLowerCase(); });
+          });
+        });
+      }
+
+      if (dispPoolSøk) {
+        const søk = dispPoolSøk.toLowerCase();
+        notater = notater.filter(function (notat) {
+          const liste = notat.etiketter ? notat.etiketter : (notat.etikett ? [notat.etikett] : []);
+          const renTekst = stripHtml(notat.tekst).toLowerCase();
+          return renTekst.includes(søk) ||
+            (notat.dato && notat.dato.toLowerCase().includes(søk)) ||
+            liste.some(function (e) { return e.toLowerCase().includes(søk); });
+        });
+      }
+
+      if (dispPoolFilterEtiketter.length > 0) {
+        notater = notater.slice().sort(function (a, b) {
+          function tellTreff(notat) {
+            const liste = notat.etiketter ? notat.etiketter : (notat.etikett ? [notat.etikett] : []);
+            return dispPoolFilterEtiketter.filter(function (fe) {
+              return liste.some(function (e) { return e.toLowerCase() === fe.toLowerCase(); });
+            }).length;
+          }
+          const diff = tellTreff(b) - tellTreff(a);
+          return diff !== 0 ? diff : b.id - a.id;
+        });
+      }
+
+      notater.forEach(function (notat) {
+        const kort = lagNotatKort(notat);
+        kort.draggable = true;
+        kort.dataset.context = "midt";
+        kort.dataset.notatId = String(notat.id);
+        if (brukteIds.indexOf(notat.id) !== -1) kort.classList.add("in-use");
+        if (notat.id === aktivtForhåndsvisNotatId) kort.classList.add("aktiv-forhandsvis");
+        kort.addEventListener("click", function () {
+          const rutenett = document.getElementById("disp-midt-rutenett");
+          if (rutenett) rutenett.querySelectorAll(".note-card").forEach(function (k) { k.classList.remove("aktiv-forhandsvis"); });
+          aktivtForhåndsvisNotatId = notat.id;
+          kort.classList.add("aktiv-forhandsvis");
+          renderDispForhåndsvis();
+        });
+        kort.addEventListener("dragstart", function (e) {
+          dragNotatId = notat.id;
+          dragFraSeksjonId = null;
+          kort.classList.add("dragging");
+          e.dataTransfer.effectAllowed = "move";
+        });
+        kort.addEventListener("dragend", function () { kort.classList.remove("dragging"); });
+        pool.appendChild(kort);
+      });
+    }
+
+    function renderDispForhåndsvis() {
+      const container = document.getElementById("disp-forhandsvis-inhalt");
+      if (!container) return;
+      container.innerHTML = "";
+
+      if (aktivtForhåndsvisNotatId === null) {
+        const tom = document.createElement("div");
+        tom.className = "disp-forhandsvis-tom";
+        tom.textContent = "Klikk på et kort";
+        container.appendChild(tom);
+        return;
+      }
+
+      const notat = hentNotater().find(function (n) { return n.id === aktivtForhåndsvisNotatId; });
+      if (!notat) { aktivtForhåndsvisNotatId = null; renderDispForhåndsvis(); return; }
+
+      const etikettListe = notat.etiketter ? notat.etiketter : (notat.etikett ? [notat.etikett] : []);
+      if (etikettListe.length > 0) {
+        const etiketterDiv = document.createElement("div");
+        etiketterDiv.className = "disp-forhandsvis-etiketter";
         etikettListe.forEach(function (navn) {
           const merke = document.createElement("span");
           merke.className = "note-label-badge";
@@ -909,47 +2373,280 @@
           merke.style.color = farge;
           merke.style.backgroundColor = "rgba(" + r + "," + g + "," + b + ",0.12)";
           merke.textContent = navn.charAt(0).toUpperCase() + navn.slice(1);
-          merke.addEventListener("click", function (e) {
-            e.stopPropagation();
-            const scrollY = window.scrollY;
-            søkInput.value = navn;
-            søkeTekst = navn.toLowerCase();
-            søkDatoInput.value = "";
-            søkKalenderKnapp.classList.remove("aktiv");
-            søkTømKnapp.style.display = "inline-block";
-            visNotater();
-            window.scrollTo({ top: scrollY });
-          });
-          meta.appendChild(merke);
+          etiketterDiv.appendChild(merke);
         });
+        container.appendChild(etiketterDiv);
+      }
 
-        const tekst = document.createElement("p");
-        tekst.className = "note-text";
-        tekst.textContent = notat.tekst;
+      const tekstDiv = document.createElement("div");
+      tekstDiv.className = "disp-forhandsvis-tekst";
+      tekstDiv.innerHTML = notat.tekst;
+      container.appendChild(tekstDiv);
 
-        kort.appendChild(meta);
-        kort.appendChild(tekst);
+      if (notat.kilde) {
+        const kildeDiv = document.createElement("div");
+        kildeDiv.className = "disp-forhandsvis-kilde";
+        const erUrl = notat.kilde.startsWith("http://") || notat.kilde.startsWith("https://");
+        if (erUrl) {
+          const lenke = document.createElement("a");
+          lenke.href = notat.kilde;
+          lenke.target = "_blank";
+          lenke.rel = "noopener noreferrer";
+          lenke.textContent = notat.kilde;
+          kildeDiv.appendChild(document.createTextNode("Kilde: "));
+          kildeDiv.appendChild(lenke);
+        } else {
+          kildeDiv.textContent = "Kilde: " + notat.kilde;
+        }
+        container.appendChild(kildeDiv);
+      }
+    }
 
-        kort.addEventListener("click", function () {
-          redigerNotatId = notat.id;
-          valgteEtiketter = notat.etiketter
-            ? notat.etiketter.slice()
-            : (notat.etikett ? [notat.etikett] : []);
-          input.value = notat.tekst;
-          settRedigeringsmodus(true);
-          oppdaterOrdteller();
-          visEtiketter();
-          visNotater();
-          input.focus();
-          window.scrollTo({ top: 0, behavior: "smooth" });
+    function visDisposisjon() {
+      const panel = document.getElementById("disposisjon-panel");
+      const disp = hentDisposisjon();
+      panel.innerHTML = "";
+
+      // Navigasjonslinje
+      const alleListe = hentAlleDisposisjoner();
+      const aktivId = hentAktivDispId();
+
+      const navBar = document.createElement("div");
+      navBar.className = "disp-nav";
+
+      alleListe.forEach(function (d) {
+        const knapp = document.createElement("button");
+        knapp.className = "disp-nav-knapp" + (d.id === aktivId ? " aktiv" : "");
+        knapp.textContent = d.tittel || "Uten tittel";
+        knapp.title = d.tittel || "Uten tittel";
+        knapp.addEventListener("click", function () {
+          settAktivDispId(d.id);
+          aktivtForhåndsvisNotatId = null;
+          visDisposisjon();
         });
-
-        kort.addEventListener("contextmenu", function (e) {
-          åpneKontekstMeny(e, notat.id);
-        });
-
-        liste.appendChild(kort);
+        navBar.appendChild(knapp);
       });
+
+      const nyKnapp = document.createElement("button");
+      nyKnapp.className = "disp-ny-knapp";
+      nyKnapp.textContent = "+ Ny";
+      nyKnapp.title = "Opprett ny disposisjon";
+      nyKnapp.addEventListener("click", function () {
+        const seksjoner = STANDARD_SEKSJONER.map(function (navn, i) {
+          return { id: Date.now() + i + 1, navn: navn, notatIds: [] };
+        });
+        const nyDisp = { id: Date.now(), tittel: "", seksjoner: seksjoner };
+        const alle = hentAlleDisposisjoner();
+        alle.push(nyDisp);
+        lagreAlleDisposisjoner(alle);
+        settAktivDispId(nyDisp.id);
+        visDisposisjon();
+      });
+      navBar.appendChild(nyKnapp);
+
+      const eksportKnapp = document.createElement("button");
+      eksportKnapp.className = "disp-eksport-knapp";
+      eksportKnapp.textContent = "Eksporter ↓";
+      eksportKnapp.title = "Last ned disposisjonen som tekstfil";
+      eksportKnapp.addEventListener("click", function () {
+        eksporterDisposisjon(hentDisposisjon());
+      });
+      navBar.appendChild(eksportKnapp);
+
+      if (alleListe.length > 1) {
+        const slettDispKnapp = document.createElement("button");
+        slettDispKnapp.className = "disp-slett-disp-knapp";
+        slettDispKnapp.textContent = "Slett";
+        slettDispKnapp.title = "Slett aktiv disposisjon";
+        slettDispKnapp.addEventListener("click", function () {
+          const tittel = disp.tittel || "Uten tittel";
+          if (!confirm("Slette «" + tittel + "»?")) return;
+          let alle = hentAlleDisposisjoner();
+          alle = alle.filter(function (d) { return d.id !== aktivId; });
+          lagreAlleDisposisjoner(alle);
+          settAktivDispId(alle[0].id);
+          visDisposisjon();
+        });
+        navBar.appendChild(slettDispKnapp);
+      }
+
+      panel.appendChild(navBar);
+
+      const layout = document.createElement("div");
+      layout.className = "disp-layout";
+
+      const venstre = document.createElement("div");
+      venstre.className = "disp-venstre";
+
+      const sjangerRad = document.createElement("div");
+      sjangerRad.className = "disp-sjanger-rad";
+      ["Nyhet", "Feature"].forEach(function (navn) {
+        const knapp = document.createElement("button");
+        knapp.className = "disp-sjanger-knapp" + (disp.sjanger === navn ? " aktiv" : "");
+        knapp.textContent = navn;
+        knapp.addEventListener("click", function () {
+          const d = hentDisposisjon();
+          d.sjanger = d.sjanger === navn ? "" : navn;
+          lagreDisposisjon(d);
+          sjangerRad.querySelectorAll(".disp-sjanger-knapp").forEach(function (k) {
+            k.classList.toggle("aktiv", k.textContent === d.sjanger);
+          });
+          sjangerTagg.textContent = d.sjanger;
+          sjangerTagg.style.display = d.sjanger ? "inline-block" : "none";
+        });
+        sjangerRad.appendChild(knapp);
+      });
+      venstre.appendChild(sjangerRad);
+
+      const sjangerTagg = document.createElement("span");
+      sjangerTagg.className = "disp-sjanger-tagg";
+      sjangerTagg.textContent = disp.sjanger || "";
+      sjangerTagg.style.display = disp.sjanger ? "inline-block" : "none";
+      venstre.appendChild(sjangerTagg);
+
+      const tittelInput = document.createElement("input");
+      tittelInput.type = "text";
+      tittelInput.className = "disp-tittel-input";
+      tittelInput.placeholder = "Sakstittel...";
+      tittelInput.value = disp.tittel;
+      tittelInput.addEventListener("input", function () {
+        const d = hentDisposisjon();
+        d.tittel = this.value;
+        lagreDisposisjon(d);
+        const aktivKnapp = navBar.querySelector(".disp-nav-knapp.aktiv");
+        if (aktivKnapp) { aktivKnapp.textContent = this.value || "Uten tittel"; aktivKnapp.title = this.value || "Uten tittel"; }
+      });
+      venstre.appendChild(tittelInput);
+
+      const alleKollapset = function () {
+        return disp.seksjoner.length > 0 && disp.seksjoner.every(function (s) { return kollapserteSeksjoner.has(s.id); });
+      };
+      const kollapsAlleKnapp = document.createElement("button");
+      kollapsAlleKnapp.className = "disp-kollaps-alle-knapp";
+      kollapsAlleKnapp.textContent = alleKollapset() ? "Ekspander alle" : "Kollaps alle";
+      kollapsAlleKnapp.addEventListener("click", function () {
+        const skalKollapse = !alleKollapset();
+        disp.seksjoner.forEach(function (s) {
+          const seksjonEl = venstre.querySelector("[data-seksjon-id='" + s.id + "']");
+          if (skalKollapse) {
+            kollapserteSeksjoner.add(s.id);
+            if (seksjonEl) seksjonEl.classList.add("kollapset");
+          } else {
+            kollapserteSeksjoner.delete(s.id);
+            if (seksjonEl) seksjonEl.classList.remove("kollapset");
+          }
+        });
+        kollapsAlleKnapp.textContent = skalKollapse ? "Ekspander alle" : "Kollaps alle";
+      });
+      venstre.appendChild(kollapsAlleKnapp);
+
+      disp.seksjoner.forEach(function (seksjon) {
+        const seksjonEl = lagSeksjonElement(seksjon);
+        seksjonEl.dataset.seksjonId = seksjon.id;
+        venstre.appendChild(seksjonEl);
+      });
+
+      const leggTilKnapp = document.createElement("button");
+      leggTilKnapp.className = "btn btn-ghost btn-sm disp-legg-til-seksjon";
+      leggTilKnapp.textContent = "+ Legg til seksjon";
+      leggTilKnapp.addEventListener("click", function () {
+        const d = hentDisposisjon();
+        d.seksjoner.push({ id: Date.now(), navn: "Ny seksjon", notatIds: [] });
+        lagreDisposisjon(d);
+        visDisposisjon();
+      });
+      venstre.appendChild(leggTilKnapp);
+
+      // --- Midtkolonne ---
+      const midt = document.createElement("div");
+      midt.className = "disp-midt";
+
+      const midtHeader = document.createElement("div");
+      midtHeader.className = "disp-pool-header";
+      midtHeader.textContent = "Notater";
+      midt.appendChild(midtHeader);
+
+      const søkRad = document.createElement("div");
+      søkRad.className = "disp-pool-søk";
+
+      const søkInputEl = document.createElement("input");
+      søkInputEl.type = "text";
+      søkInputEl.className = "disp-pool-søk-input";
+      søkInputEl.placeholder = "Søk...";
+      søkInputEl.value = dispPoolSøk;
+
+      const tømKnapp = document.createElement("button");
+      tømKnapp.className = "søk-tøm-knapp";
+      tømKnapp.textContent = "✕";
+      tømKnapp.style.display = dispPoolSøk ? "inline-block" : "none";
+      tømKnapp.addEventListener("click", function () {
+        dispPoolSøk = "";
+        søkInputEl.value = "";
+        tømKnapp.style.display = "none";
+        renderDispPoolInhalt();
+      });
+
+      søkInputEl.addEventListener("input", function () {
+        dispPoolSøk = this.value.trim().toLowerCase();
+        tømKnapp.style.display = dispPoolSøk ? "inline-block" : "none";
+        renderDispPoolInhalt();
+      });
+
+      søkRad.appendChild(søkInputEl);
+      søkRad.appendChild(tømKnapp);
+      midt.appendChild(søkRad);
+
+      const filterDiv = document.createElement("div");
+      filterDiv.id = "disp-pool-filter";
+      filterDiv.className = "disp-pool-filter";
+      midt.appendChild(filterDiv);
+
+      const pool = document.createElement("div");
+      pool.id = "disp-midt-rutenett";
+      pool.className = "disp-midt-rutenett";
+      midt.appendChild(pool);
+
+      // --- Høyrekolonne: Forhåndsvisning ---
+      const forhandsvis = document.createElement("div");
+      forhandsvis.className = "disp-forhandsvis";
+
+      const fvHeader = document.createElement("div");
+      fvHeader.className = "disp-forhandsvis-header";
+      fvHeader.textContent = "Forhåndsvisning";
+      forhandsvis.appendChild(fvHeader);
+
+      const fvInnhold = document.createElement("div");
+      fvInnhold.id = "disp-forhandsvis-inhalt";
+      forhandsvis.appendChild(fvInnhold);
+
+      layout.appendChild(venstre);
+      layout.appendChild(midt);
+      layout.appendChild(forhandsvis);
+      panel.appendChild(layout);
+
+      renderDispPoolFilter();
+      renderDispPoolInhalt();
+      renderDispForhåndsvis();
+    }
+
+    function settAppModus(modus) {
+      appModus = modus;
+      const erDisp = modus === "disposisjon";
+      document.querySelector(".main").classList.toggle("disp-modus", erDisp);
+      const skjulVedDisp = [
+        document.querySelector(".editor-card"),
+        document.querySelector(".søk-omrade"),
+        document.getElementById("etikett-filter"),
+        document.querySelector(".liste-header"),
+        document.getElementById("notat-liste")
+      ];
+      skjulVedDisp.forEach(function (el) {
+        if (el) el.style.display = erDisp ? "none" : "";
+      });
+      document.getElementById("disposisjon-panel").style.display = erDisp ? "block" : "none";
+      document.getElementById("modus-notater").classList.toggle("aktiv", !erDisp);
+      document.getElementById("modus-disposisjon").classList.toggle("aktiv", erDisp);
+      if (erDisp) { visDisposisjon(); } else { visNotater(); }
     }
 
     // --- Høyreklikkmeny ---
@@ -984,7 +2681,7 @@
 
       redigerNotatId = notat.id;
       valgteEtiketter = notat.etiketter ? notat.etiketter.slice() : (notat.etikett ? [notat.etikett] : []);
-      input.value = notat.tekst;
+      input.innerHTML = notat.tekst;
       settRedigeringsmodus(true);
       oppdaterOrdteller();
       visEtiketter();
@@ -1022,6 +2719,24 @@
       const dropInnhold = document.getElementById("etikett-dropdown-innhold");
       if (dropInnhold) dropInnhold.classList.remove("aapen");
     });
+
+    // Visning
+    function oppdaterVisning() {
+      const grid = document.getElementById("notat-liste");
+      const knapp = document.getElementById("visning-knapp");
+      const erKort = visningsModus === "kort";
+      grid.classList.toggle("kortvisning", erKort);
+      knapp.textContent = erKort ? "☰ Liste" : "⊞ Kort";
+      knapp.classList.toggle("active", erKort);
+    }
+
+    document.getElementById("visning-knapp").addEventListener("click", function () {
+      visningsModus = visningsModus === "liste" ? "kort" : "liste";
+      localStorage.setItem("visning", visningsModus);
+      oppdaterVisning();
+    });
+
+    oppdaterVisning();
 
     // Sortering
     document.getElementById("sorter-knapp").addEventListener("click", function () {
@@ -1073,6 +2788,42 @@
       søkKalenderKnapp.classList.add("aktiv");
       visNotater();
     });
+
+    // --- Formateringsverktøylinje ---
+
+    document.querySelectorAll(".fmt-btn[data-cmd]").forEach(function (knapp) {
+      knapp.addEventListener("mousedown", function (e) {
+        e.preventDefault();
+        document.execCommand(this.dataset.cmd, false, null);
+        input.focus();
+        oppdaterFmtKnapperStatus();
+      });
+    });
+
+    document.getElementById("fmt-h2").addEventListener("mousedown", function (e) {
+      e.preventDefault();
+      const erH2 = document.queryCommandValue("formatBlock").toLowerCase() === "h2";
+      document.execCommand("formatBlock", false, erH2 ? "div" : "h2");
+      input.focus();
+      oppdaterFmtKnapperStatus();
+    });
+
+    function oppdaterFmtKnapperStatus() {
+      document.querySelector("[data-cmd='bold']").classList.toggle("aktiv", document.queryCommandState("bold"));
+      document.querySelector("[data-cmd='italic']").classList.toggle("aktiv", document.queryCommandState("italic"));
+      document.querySelector("[data-cmd='insertUnorderedList']").classList.toggle("aktiv", document.queryCommandState("insertUnorderedList"));
+      document.getElementById("fmt-h2").classList.toggle("aktiv", document.queryCommandValue("formatBlock").toLowerCase() === "h2");
+    }
+
+    document.addEventListener("selectionchange", function () {
+      if (document.activeElement === input) {
+        oppdaterFmtKnapperStatus();
+      }
+    });
+
+    // Modus
+    document.getElementById("modus-notater").addEventListener("click", function () { settAppModus("notater"); });
+    document.getElementById("modus-disposisjon").addEventListener("click", function () { settAppModus("disposisjon"); });
 
     // Start
     visEtiketter();
